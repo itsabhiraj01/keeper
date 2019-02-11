@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Firebase -->
+    <script type="text/javascript" src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/firebasejs/5.8.2/firebase-app.js"></script>
+
+
+    <!-- Add additional services that you want to use -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-auth.js"></script> -->
+    <script type="text/javascript" src="https://www.gstatic.com/firebasejs/5.8.2/firebase-database.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/firebasejs/5.9.1/firebase-storage.js"></script>
+    <!-- <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-firestore.js"></script> -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-messaging.js"></script> -->
+    <script type="text/javascript" src="https://www.gstatic.com/firebasejs/5.8.2/firebase-functions.js"></script>
+
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIza****RsIYZY",
+            authDomain: "keeper-2923e.firebaseapp.com",
+            databaseURL: "https://keeper-2923e.firebaseio.com",
+            projectId: "keeper-2923e",
+            storageBucket: "keeper-2923e.appspot.com",
+            messagingSenderId: "1094226696666"
+        };
+        firebase.initializeApp(config);
+    </script>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+     <script src="https://cdn.tiny.cloud/1/izvuprygwx7w3e72235i5g6qbm0x0lg7yht4fzfyomtysiy0/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <title>Keeper</title>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" -->
+    <!-- crossorigin="anonymous"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+
+
+    <link rel="stylesheet" href="css/index.css">
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+
+
+    <script type="text/javascript" src="/js/index.js"></script>
+    <script type="text/javascript" src="/js/home-search.js"></script>
+
+</head>
+
+<body class="container bg-light">
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+    <div class="container">
+
+        <!-- <h1>Welcome to Keeper</h1> -->
+
+        <!-- Image and text -->
+        <nav class="navbar navbar-light bg-light">
+            <div class="col-md-0">
+                <a class="navbar-brand" href="#">
+                    <img src="/img/Keeper.png" width="50" height="50" class="d-inline-block align-top" alt="">
+                </a></div>
+            <div class="col-md-11">
+                <h2>Welcome to Keeper</h2>
+
+            </div>
+        </nav>
+        <br />
+
+        <!-- Nav Bar -->
+        <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab"
+                    aria-controls="pills-home" aria-selected="true">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-search-tab" data-toggle="pill" href="#pills-search" role="tab"
+                    aria-controls="pills-search" aria-selected="false">Search Note</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-add-tab" data-toggle="pill" href="#pills-add" role="tab"
+                    aria-controls="pills-add" aria-selected="false">Add Note</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-add-tab" data-toggle="pill" href="#pills-upload" role="tab"
+                    aria-controls="pills-upload" aria-selected="false">Upload File</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-edit-tab" data-toggle="pill" href="#pills-edit" role="tab"
+                    aria-controls="pills-edit" aria-selected="false">Edit Note</a>
+            </li>
+        </ul>
+
+
+
+        <!-- Container div -->
+        <div class="tab-content" id="pills-tabContent">
+
+            <!-- Home -->
+            <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                <div id="home_carousel" class="carousel slide" data-ride="carousel" style="margin-bottom: 100px">
+                    <ol class="carousel-indicators">
+                        <li data-target="#home_carousel" data-slide-to="0" class="active"></li>
+                        <li data-target="#home_carousel" data-slide-to="1"></li>
+                        <li data-target="#home_carousel" data-slide-to="2"></li>
+                    </ol>
+                    <div class="carousel-inner" style=" width:100%; height: 200px !important;">
+                        <div class="carousel-item active">
+                            <img src="img/blue.png" class="d-block w-100" style=" width:100%; height: 200px !important;"
+                                alt="Keeper">
+                            <div class="carousel-caption  d-xs-block d-sm-block d-md-block">
+                                <h5>Keeper</h5>
+                                <p>Keeper is your home to save your all important notes.</p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <img src="img/green.png" class="d-block w-100"
+                                style=" width:100%; height: 200px !important;" alt="Searching Note">
+                            <div class="carousel-caption  d-xs-block d-sm-block d-md-block">
+                                <h5>Searching Notes</h5>
+                                <p>Quickly search notes with filters.</p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <img src="img/yellow.png" class="d-block w-100"
+                                style=" width:100%; height: 200px !important;" alt="Add Notes">
+                            <div class="carousel-caption  d-xs-block d-sm-block d-md-block">
+                                <h5>Adding Notes</h5>
+                                <p>Quickly add a note along with its attributes.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#home_carousel" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#home_carousel" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+                <div class="form-row col-md-12" style="margin-top:30px">
+                    <div class="col-md-3"></div>
+                    <input type="text" class="form-control col-md-6 text-center " id="search_global"
+                        placeholder="Search...">
+                    <div class="col-md-3"></div>
+                </div>
+                <br />
+                <div class="form-row col-md-12">
+                    <div class="col-md-5"></div>
+                    <button type="button" id="search_global_submit_button"
+                        class="btn btn-primary btn-lg btn-block col-md-2">Search</button>
+                    <div class="col-md-5"></div>
+                </div>
+                <br /><br />
+                <div class="accordion" id="global_notes_display" style="margin-bottom: 30px"></div>
+                <div id="global_spinner_container">
+                    <div class="spinner-border text-primary" id="global_notes_spinner" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Note-->
+            <div class="tab-pane fade" id="pills-search" role="tabpanel" aria-labelledby="pills-search-tab">
+                <div id="search_note_alert"></div>
+                <form id="search_note_form">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="search_name">Name : </label>
+                            <input type="text" class="form-control" id="search_name" placeholder="Name">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="search_category">Category : </label>
+                            <input type="text" class="form-control" id="search_category" placeholder="Category">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="search_type_selector">Type <sup style="color:red;font-size:16px">*</sup> :
+                            </label>
+                            <select class="form-control" id="search_type_selector" form="search_note_form">
+                                <option value="note" selected>Note</option>
+                                <option value="link">Link</option>
+                                <option value="tip">Tip</option>
+                                <option value="todo">Todo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="search_tags">Tags : </label>
+                        <input type="text" class="form-control" id="search_tags" placeholder="Tags">
+                    </div>
+                    <div class="form-group">
+                        <label for="search_keywords">Keywords : </label>
+                        <input type="text" class="form-control" id="search_keywords" placeholder="Keywords">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-xs-12 col-lg-5">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="search_start_date">Select Date ( From ): </label>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input id="search_start_date" type="date" name="date">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-offset-0 col-xs-12 col-lg-offset-2 col-lg-5">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="search_end_date">Select Date ( To ): </label>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input id="search_end_date" type="date" name="date">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row custom-control custom-switch" id="search_in_files_div">
+                        <input type="checkbox" class="custom-control-input" id="search_in_files">
+                        <label class="custom-control-label" for="search_in_files">Include Uploaded Files for
+                            Searching</label>
+                    </div>
+                    <br />
+                    <button type="button" id="search_note_submit_button"
+                        class="btn btn-primary btn-lg btn-block">Search</button>
+                </form>
+                <!-- top:0;
+                bottom: 0;
+                left: 0;
+                right: 0; -->
+
+
+                <div class="accordion" id="notes_diplay"
+                    style="margin-bottom: 100px; background-color: rgba(0, 0, 0, 0.3)"></div>
+                <div id="spinner_container">
+                    <div class="spinner-border text-primary" id="fetch_notes_spinner" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Note -->
+            <div class="tab-pane fade" id="pills-add" role="tabpanel" aria-labelledby="pills-add-tab">
+                <div id="add_note_alert">
+                </div>
+                <form id="add_note_form" style="margin-bottom: 100px">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="add_name">Name <sup style="color:red;font-size:16px">*</sup> : </label>
+                            <input type="text" class="form-control" id="add_name" placeholder="Name">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="add_category">Category <sup style="color:red;font-size:16px">*</sup> : </label>
+                            <input type="text" class="form-control" id="add_category" placeholder="Category">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="add_type_selector">Type <sup style="color:red;font-size:16px">*</sup> : </label>
+                            <select class="form-control" id="add_type_selector" form="add_note_form">
+                                <option value="note" selected>Note</option>
+                                <option value="link">Link</option>
+                                <option value="tip">Tip</option>
+                                <option value="todo">Todo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="add_tags">Tags <sup style="color:red;font-size:16px">*</sup> : </label>
+                        <input type="text" class="form-control" id="add_tags" placeholder="Tags">
+                    </div>
+                    <div class="form-group">
+                        <label for="add_note">Note <sup style="color:red;font-size:16px">*</sup> : </label>
+                        <textarea class="form-control" rows="15" id="add_note"
+                            placeholder="Either enter text or select a file below..."></textarea>
+                        <script>
+                            tinymce.init({
+                            selector: '#add_note',
+                            height: 400,
+                            plugins: 'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+                            toolbar_mode: 'floating',
+                            });
+                        </script>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <label for="add_file">Input file : </label>
+                                </div>
+                                <div class="form-group col-md-9">
+                                    <input type="file" accept='text/plain' onchange='openFile(event)'
+                                        class="form-control-file" id="add_file" multiple />
+                                    <output id="list"></output>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <label for="add_date">Select Date <sup style="color:red;font-size:16px">*</sup> :
+                                    </label>
+                                </div>
+                                <div class="form-group col-md-9">
+                                    <input type="date" name="date" id="add_date">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="add_note_submit_button" type="button"
+                        class="btn btn-primary btn-lg btn-block">Add</button>
+                </form>
+            </div>
+
+            <!-- Upload File -->
+            <div class="tab-pane fade" id="pills-upload" role="tabpanel" aria-labelledby="pills-upload-tab">
+                <div id="upload_file_alert">
+                </div>
+                <form id="upload_file_form" style="margin-bottom: 100px">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="file_name">Name <sup style="color:red;font-size:16px">*</sup> : </label>
+                            <input type="text" class="form-control" id="file_name" placeholder="Name">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="language">Language <sup style="color:red;font-size:16px">*</sup> : </label>
+                            <input type="text" class="form-control" id="language" placeholder="Language">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="file_type_selector">Type <sup style="color:red;font-size:16px">*</sup> :
+                            </label>
+                            <select class="form-control" id="file_type_selector" form="upload_file_form">
+                                <option value="txt" selected>Text</option>
+                                <option value="pdf">pdf</option>
+                                <option value="doc">docx</option>
+                                <option value="ppt">ppt</option>
+                                <option value="zip">zip</option>
+                                <option value="txt">code</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="author_name">Author <sup style="color:red;font-size:16px">*</sup> : </label>
+                            <input type="text" class="form-control" id="author_name" placeholder="Author">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="publication_name">Publication <sup style="color:red;font-size:16px">*</sup> :
+                            </label>
+                            <input type="text" class="form-control" id="publication_name" placeholder="Publication">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="file_tags">Tags <sup style="color:red;font-size:16px">*</sup> : </label>
+                        <input type="text" class="form-control" id="file_tags" placeholder="Tags">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <label for="upload_file">Input file <sup style="color:red;font-size:16px">*</sup> :
+                                    </label>
+                                </div>
+                                <div class="form-group col-md-9">
+                                    <input type="file" accept='text/plain' onchange='uploadFile(event)'
+                                        class="form-control-file" id="upload_file" multiple />
+                                    <output id="file"></output>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <label for="upload_date">Select Date <sup style="color:red;font-size:16px">*</sup> :
+                                    </label>
+                                </div>
+                                <div class="form-group col-md-9">
+                                    <input type="date" name="date" id="upload_date">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="upload_file_submit_button" type="button"
+                        class="btn btn-primary btn-lg btn-block">Upload</button>
+                </form>
+            </div>
+
+            <!-- Edit Note -->
+            <div class="tab-pane fade" style="margin-bottom: 100px" id="pills-edit" role="tabpanel"
+                aria-labelledby="pills-edit-tab">
+                <div id="edit_note_alert">
+                </div>
+                <!-- Find Note -->
+                <div id="find_note_alert">
+                </div>
+                <form id="find_note_form">
+                    <div class="form-group col-md-12 col-xs-12" style="padding:10px;">
+                        <div class="form-row">
+                            <div class="form-group col-md-8 col-xs-8" style="align:center">
+                                <input id="find_note_key" class="form-control" type="text"
+                                    placeholder="Enter note key...">
+                            </div>
+                            <div class="form-group col-md-4 col-xs-4">
+                                <select class="form-control" id="edit_type_selector" form="edit_note_form">
+                                    <option value="note" selected>Note</option>
+                                    <option value="link">Link</option>
+                                    <option value="tip">Tip</option>
+                                    <option value="todo">Todo</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="find_note_submit_button" type="button"
+                        class="btn btn-primary btn-lg btn-block">Find</button>
+                    <br />
+                    <a id="forgot_key" class="text-primary pointer">Forgot Key? Click here to find key.</a>
+                </form>
+
+                <form id="edit_note_form" style="display: none">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="edit_name">Name <sup style="color:red;font-size:16px">*</sup> : </label>
+                            <input type="text" class="form-control" id="edit_name" placeholder="Name">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="edit_category">Category <sup style="color:red;font-size:16px">*</sup> : </label>
+                            <input type="text" class="form-control" id="edit_category" placeholder="Category">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_tags">Tags <sup style="color:red;font-size:16px">*</sup> : </label>
+                        <input type="text" class="form-control" id="edit_tags" placeholder="Tags">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_note">Note <sup style="color:red;font-size:16px">*</sup> : </label>
+                        <textarea class="form-control" rows="10" id="edit_note"
+                            placeholder="Either enter text or select a file below..."></textarea>
+                            <script>
+                                tinymce.init({
+                                selector: '#edit_note',
+                                height: 400,
+                                plugins: 'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+                                toolbar_mode: 'floating',
+                                });
+                            </script>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 cold-lg-6 col-xs-6">
+                            <button id="edit_note_submit_button" type="button"
+                                class="btn btn-primary btn-lg btn-block">Edit</button>
+                        </div>
+                        <div class="col-xs-6 col-md-6 col-lg-6">
+                            <button id="delete_note_submit_button" type="button" data-toggle="modal"
+                                class="btn btn-danger btn-lg btn-block">Delete</button>
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalDivLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalDivLabel"><i class="fas fa-key"></i> Authentication</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="password" id="password" class="form-control" placeholder="Enter password...">
+                    <label for="password" id="incorrect_password_label" style="display: none"><span
+                            style="color:red;padding-left: 8px;padding-top: 16px;">Authentication
+                            failed!</span></label>
+                </div>
+                <div class="modal-footer">
+                    <button id="close_modal" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="submit_password" type="button" class="btn btn-primary">Verify</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
