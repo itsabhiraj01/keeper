@@ -34,14 +34,16 @@
     </script>
 
     <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
         crossorigin="anonymous">
 
     <script type="text/javascript" src="/js/index.js"></script>
     <title>Keeper</title>
+
 </head>
 
-<body>
+<body class="container bg-light">
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -52,10 +54,24 @@
         crossorigin="anonymous"></script>
 
     <div class="container">
-        <h1>Welcome to Keeper</h1>
+
+        <!-- <h1>Welcome to Keeper</h1> -->
+
+        <!-- Image and text -->
+        <nav class="navbar navbar-light bg-light">
+            <div class="col-md-0">
+                <a class="navbar-brand" href="#">
+                    <img src="/img/Keeper.png" width="50" height="50" class="d-inline-block align-top" alt="">
+                </a></div>
+                <div class="col-md-11">
+                    <h2>Welcome to Keeper</h2>
+
+                </div>
+        </nav>
+        <br />
 
         <!-- Nav Bar -->
-        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab"
                     aria-controls="pills-home" aria-selected="true">Home</a>
@@ -69,6 +85,8 @@
                     aria-controls="pills-contact" aria-selected="false">Add Note</a>
             </li>
         </ul>
+
+
 
         <!-- Container div -->
         <div class="tab-content" id="pills-tabContent">
@@ -119,25 +137,27 @@
             </div>
 
             <!-- Search Note-->
-            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" >
+                    <div id="search_note_alert">
+                        </div>
                 <form id="search_note_form">
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="name">Name : </label>
-                            <input type="text" class="form-control" id="name" placeholder="Name">
+                            <input type="text" class="form-control" id="search_name" placeholder="Name">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="language">Language : </label>
-                            <input type="text" class="form-control" id="language" placeholder="Language">
+                            <input type="text" class="form-control" id="search_language" placeholder="Language">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="tags">Tags : </label>
-                        <input type="text" class="form-control" id="tags" placeholder="Tags">
+                        <input type="text" class="form-control" id="search_tags" placeholder="Tags">
                     </div>
                     <div class="form-group">
                         <label for="keywords">Keywords : </label>
-                        <input type="text" class="form-control" id="keywords" placeholder="Keywords">
+                        <input type="text" class="form-control" id="search_keywords" placeholder="Keywords">
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
@@ -146,7 +166,7 @@
                                     <label for="start_date">Select Date ( From ): </label>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <input id="start_date" type="date" name="date">
+                                    <input id="search_start_date" type="date" name="date">
                                 </div>
                             </div>
                         </div>
@@ -156,60 +176,68 @@
                                     <label for="end_date">Select Date ( To ): </label>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <input id="end_date" type="date" name="date">
+                                    <input id="search_end_date" type="date" name="date">
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Search</button>
+                    <button type="button" id="search_note_submit_button" class="btn btn-primary btn-lg btn-block">Search</button>
                 </form>
+
+                <div class="accordion" id="notes_diplay"  style="margin-bottom: 200px">
+
+                </div>
             </div>
 
             <!-- Add Note -->
             <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
-                <div id="add_note_alert"></div>
+                <div id="add_note_alert">
+                </div>
                 <form id="add_note_form">
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label for="add_name">Name : </label>
+                            <label for="add_name">Name <sup style="color:red;font-size:16px">*</sup> : </label>
                             <input type="text" class="form-control" id="add_name" placeholder="Name">
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="add_language">Language : </label>
+                            <label for="add_language">Language <sup style="color:red;font-size:16px">*</sup> : </label>
                             <input type="text" class="form-control" id="add_language" placeholder="Language">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="add_tags">Tags : </label>
+                        <label for="add_tags">Tags <sup style="color:red;font-size:16px">*</sup> : </label>
                         <input type="text" class="form-control" id="add_tags" placeholder="Tags">
                     </div>
                     <div class="form-group">
-                        <label for="add_note">Note : </label>
-                        <textarea class="form-control" rows="5" id="add_note"></textarea>
+                        <label for="add_note">Note <sup style="color:red;font-size:16px">*</sup> : </label>
+                        <textarea class="form-control" rows="5" id="add_note" placeholder="Either enter text or select a file below..."></textarea>
                     </div>
-                    <!-- <div class="form-row">
+                    <div class="form-row">
                         <div class="form-group col-md-6">
                             <div class="form-row">
                                 <div class="form-group col-md-3">
                                     <label for="add_file">Input file : </label>
                                 </div>
                                 <div class="form-group col-md-9">
-                                    <input type="file" class="form-control-file" id="add_file">
+                                    <input type="file" accept='text/plain' onchange='openFile(event)' class="form-control-file"
+                                        id="add_file" multiple />
+                                    <output id="list"></output>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group col-md-6">
                             <div class="form-row">
                                 <div class="form-group col-md-3">
-                                    <label for="add_date">Select Date : </label>
+                                    <label for="add_date">Select Date <sup style="color:red;font-size:16px">*</sup> :
+                                    </label>
                                 </div>
                                 <div class="form-group col-md-9">
                                     <input type="date" name="date" id="add_date">
                                 </div>
                             </div>
                         </div>
-                    </div> -->
-                    <button id="add_note_submit_button" type="button" class="btn btn-primary">Add</button>
+                    </div>
+                    <button id="add_note_submit_button" type="button" class="btn btn-primary btn-lg btn-block">Add</button>
                 </form>
             </div>
         </div>
@@ -219,3 +247,5 @@
 </body>
 
 </html>
+
+    
