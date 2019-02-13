@@ -14,6 +14,15 @@ window.onload = function () {
     document.getElementById("add_note_submit_button").onclick = upload_note;
     document.getElementById("add_date").valueAsDate = new Date();
     document.getElementById("search_end_date").valueAsDate = new Date();
+
+    // tinymce.init({
+    //     selector: '#add_note',
+    //     // plugins: 'a11ychecker advcode formatpainter linkchecker media mediaembed pageembed permanentpen powerpaste tinycomments tinydrive tinymcespellchecker',
+    //     // toolbar: 'a11ycheck code formatpainter insertfile pageembed permanentpen tinycomments',
+    //     // tinycomments_mode: 'embedded',
+    //     // tinycomments_author: 'Abhiraj'
+    //  });
+
 }
 
 //Functon to Store data into firebase
@@ -65,17 +74,18 @@ function fetch_note() {
     var Validation = formValidation();
 
     if (Validation) {
-        var js = document.createElement("script");
-        js.type = "text/javascript";
-        js.src = "/js/firebaseFetchData.js";
-        document.body.appendChild(js);
+        // var js = document.createElement("script");
+        // js.type = "text/javascript";
+        // js.src = "/js/firebaseFetchData.js";
+        // document.body.appendChild(js);
+        firebaseFetchData();
         showAlert("search_note_alert", "alert-success", null, "Showing Results (Click on close button to clear Results)", null, userDetails);
         hideElement("search_note_form");
 
     }
 
-    setTimeout(function () { filterData() }, 2000);
-
+    // setTimeout(function () { filterData() }, 2000);
+    // filterData();
     clearFields();
 }
 
@@ -86,6 +96,7 @@ function upload_note() {
     var languageField = document.getElementById('add_language');
     var tagField = document.getElementById('add_tags');
     var noteField = document.getElementById('add_note');
+    // noteField.innerHTML = tinyMCE.activeEditor.getContent({format : 'raw'});
     var fileField = document.getElementById('add_file');
     var dateField = document.getElementById('add_date');
 
@@ -149,11 +160,11 @@ function upload_note() {
     console.log("userDeatils created")
 
     if (Validation) {
-        var js = document.createElement("script");
-        js.type = "text/javascript";
-        js.src = "/js/firebaseSaveData.js";
-        document.body.appendChild(js);
-
+        // var js = document.createElement("script");
+        // js.type = "text/javascript";
+        // js.src = "/js/firebaseSaveData.js";
+        // document.body.appendChild(js);
+        firebaseSaveData();
         showAlert("add_note_alert", "alert-success", null, "Note Added!", null, userDetails);
     }
 
@@ -205,13 +216,13 @@ function showAlert(parent, alertClassName, headingClassName = "alert-heading", a
 
     var alertTextElement = document.createElement("p");
     alertTextElement.setAttribute("class", textClassName);
-    console.log("AlertText : ",alertText);
+    console.log("AlertText : ", alertText);
     //javascript to html
     alertText = alertText.split("\t").join("&nbsp;&nbsp;&nbsp;&nbsp;");
     // alertText = alertText.split(" ").join("&nbsp;");
     alertText = alertText.split("\n").join("<br />");
     alertTextElement.innerHTML = alertText;
-    console.log("AlertText : ",alertText);
+    console.log("AlertText : ", alertText);
     alertDiv.appendChild(alertTextElement);
 
 }
@@ -260,7 +271,7 @@ function filterData() {
                 } else if (tag && noteData[i].tag.toUpperCase().includes(tag.toUpperCase())) {
                     filteredData.push(noteData[i])
                 } else {
-                    if(!(name || keyword || language || tag)) {
+                    if (!(name || keyword || language || tag)) {
                         filteredData.push(noteData[i])
                     }
                 }
@@ -286,7 +297,7 @@ function filterData() {
                 } else if (tag && noteData[i].tag.toUpperCase().includes(tag.toUpperCase())) {
                     filteredData.push(noteData[i])
                 } else {
-                    if(!(name || keyword || language || tag)) {
+                    if (!(name || keyword || language || tag)) {
                         filteredData.push(noteData[i])
                     }
                 }
@@ -312,7 +323,7 @@ function filterData() {
                 } else if (tag && noteData[i].tag.toUpperCase().includes(tag.toUpperCase())) {
                     filteredData.push(noteData[i])
                 } else {
-                    if(!(name || keyword || language || tag)) {
+                    if (!(name || keyword || language || tag)) {
                         filteredData.push(noteData[i])
                     }
                 }
@@ -337,7 +348,7 @@ function filterData() {
             } else if (tag && noteData[i].tag.toUpperCase().includes(tag.toUpperCase())) {
                 filteredData.push(noteData[i])
             } else {
-                if(!(name || keyword || language || tag)) {
+                if (!(name || keyword || language || tag)) {
                     filteredData.push(noteData[i])
                 }
             }
@@ -370,6 +381,19 @@ function addToNoteDisplay(note, count) {
     h2Ele.setAttribute("class", "mb-0 panel-title");
     innerDiv.appendChild(h2Ele)
 
+    var buttonArrow = document.createElement("button");
+    if (count == 0)
+        buttonArrow.setAttribute("class", "btn btn-link");
+    else
+        buttonArrow.setAttribute("class", "btn btn-link collapsed");
+    buttonArrow.setAttribute("type", "button");
+    buttonArrow.setAttribute("data-toggle", "collapse");
+    buttonArrow.setAttribute("data-target", "#collapse" + count);
+    buttonArrow.setAttribute("aria-expanded", "true");
+    buttonArrow.setAttribute("aria-controls", "collapse" + count);
+    buttonArrow.innerHTML = '</h3><i class="fas fa-arrow-circle-down arrow-toggle"></i>';
+    h2Ele.appendChild(buttonArrow);
+
 
     var button = document.createElement("button");
     if (count === 0)
@@ -383,18 +407,6 @@ function addToNoteDisplay(note, count) {
     button.setAttribute("aria-controls", "collapse" + count);
     button.innerHTML = '<h3>' + note.name + '</h3>';
     h2Ele.appendChild(button);
-
-    var buttonArrow = document.createElement("button");
-    buttonArrow.setAttribute("class", "btn btn-link");
-    button.setAttribute("class", "btn btn-link collapsed");
-    buttonArrow.setAttribute("type", "button");
-    buttonArrow.setAttribute("data-toggle", "collapse");
-    buttonArrow.setAttribute("data-target", "#collapse" + count);
-    buttonArrow.setAttribute("aria-expanded", "true");
-    buttonArrow.setAttribute("aria-controls", "collapse" + count);
-    buttonArrow.innerHTML = '</h3><i class="fas fa-arrow-circle-down arrow-toggle"></i>';
-    h2Ele.appendChild(buttonArrow);
-
 
     //Add body
     innerDiv = document.createElement("div");
@@ -435,3 +447,43 @@ function removeChilds(id) {
     }
 }
 
+function firebaseFetchData() {
+    console.log("firebaseFetchData.js called");
+    // var firebase = firebase.database();
+    var noteRef = firebase.database().ref('notes/');
+    var count = 0;
+    noteKey = [];
+    noteData = [];
+    // Fetch data from firebase
+    (function () {
+        console.log("fetching from firebase")
+        // noteRef.push({ name: name, language: language, tag: tag, note:note, date: date});
+        // var notes = noteRef.orderByChild('date');
+        noteRef.once('value', function (snapshot) {
+            snapshot.forEach(function (childSnapshot) {
+                var childKey = childSnapshot.key;
+                noteKey.push(childKey);
+                var childData = childSnapshot.val();
+                noteData.push(childData)
+                console.log("childKey : ", childKey);
+                console.log("child Data : ", childData);
+            });
+            console.log("fetched all data");
+            filterData();
+        });
+        // console.log(noteData);
+    }());
+}
+
+function firebaseSaveData() {
+    console.log("firebaseSaveData.js called");
+    // var firebase = firebase.database();
+    var noteRef = firebase.database().ref('notes');
+
+    // Save data to firebase
+    (function () {
+        console.log("pushing to firebase")
+        noteRef.push({ name: name, language: language, tag: tag, note: note, date: date });
+        console.log("pushed to firebase");
+    }());
+}
