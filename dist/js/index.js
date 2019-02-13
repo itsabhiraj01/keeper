@@ -8,12 +8,17 @@ var keyword;
 var startDate;
 var endDate;
 var noteData, noteKey;
+// var firebase;
+var noteRef;
 
 window.onload = function () {
     document.getElementById("search_note_submit_button").onclick = fetch_note;
     document.getElementById("add_note_submit_button").onclick = upload_note;
     document.getElementById("add_date").valueAsDate = new Date();
     document.getElementById("search_end_date").valueAsDate = new Date();
+
+    // firebase = firebase.database();    
+    noteRef = firebase.database().ref('notes');
 
     // tinymce.init({
     //     selector: '#add_note',
@@ -449,8 +454,6 @@ function removeChilds(id) {
 
 function firebaseFetchData() {
     console.log("firebaseFetchData.js called");
-    // var firebase = firebase.database();
-    var noteRef = firebase.database().ref('notes/');
     var count = 0;
     noteKey = [];
     noteData = [];
@@ -477,9 +480,7 @@ function firebaseFetchData() {
 
 function firebaseSaveData() {
     console.log("firebaseSaveData.js called");
-    // var firebase = firebase.database();
-    var noteRef = firebase.database().ref('notes');
-
+    
     // Save data to firebase
     (function () {
         console.log("pushing to firebase")
