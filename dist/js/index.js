@@ -2,6 +2,7 @@ console.log("index.js called");
 var name, category, type, tag, note, date;
 var keyword, startDate, endDate;
 var noteData, noteKey;
+var userDeatils;
 // var firebase;
 var noteRef, linkRef, tipRef, todoRef, allRef;
 
@@ -47,7 +48,7 @@ function fetch_note() {
     type = typeField.options[typeField.selectedIndex].value;
     console.log(typeField.options[typeField.selectedIndex].value);
 
-    var userDetails = ""
+    userDetails = ""
     if (name) userDetails += "Name : " + name + "<br />";
     if (category) userDetails += "category : " + category + "<br />";
     if (type) userDetails += "Type : " + type + "<br />";
@@ -118,7 +119,7 @@ function upload_note() {
 
     console.log("assigned values");
 
-    var userDetails = "Name : " + name + "<br />category : " + category + "<br />Type : " + type +
+    userDetails = "Name : " + name + "<br />category : " + category + "<br />Type : " + type +
         "<br />Tag : " + tag + "<br />Note : " + note + "<br />Date : " + date;
 
     function formValidation() {
@@ -163,7 +164,7 @@ function upload_note() {
         console.log("clearFields is initiated");
         nameField.value = "";
         categoryField.value = "";
-        typeField.value = "";
+        typeField.selectedIndex = 0;
         tagField.value = "";
         noteField.value = "";
         fileField.value = "";
@@ -376,6 +377,7 @@ function filterData() {
         }
     }
     var notes = preciselyFilteredData.concat(filteredData);
+    showAlert("search_note_alert", "alert-success", null, "Showing " + notes.length + " Results (double tap to close)", null, userDetails);
     show_notes(notes);
 }
 
@@ -503,7 +505,6 @@ function firebaseFetchData(userDetails) {
                 console.log("child Data : ", childData);
             });
             console.log("fetched all data");
-            showAlert("search_note_alert", "alert-success", null, "Showing " + noteData.length + " Results (double tap to close)", null, userDetails);
             filterData();
             hideElement("fetch_notes_spinner");
         });
