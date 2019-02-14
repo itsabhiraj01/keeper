@@ -34,14 +34,15 @@
     </script>
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+        crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
         crossorigin="anonymous">
 
     <script type="text/javascript" src="/js/index.js"></script>
 
     <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=izvuprygwx7w3e72235i5g6qbm0x0lg7yht4fzfyomtysiy0"></script>
-    
+
     <title>Keeper</title>
 
 </head>
@@ -66,10 +67,10 @@
                 <a class="navbar-brand" href="#">
                     <img src="/img/Keeper.png" width="50" height="50" class="d-inline-block align-top" alt="">
                 </a></div>
-                <div class="col-md-11">
-                    <h2>Welcome to Keeper</h2>
+            <div class="col-md-11">
+                <h2>Welcome to Keeper</h2>
 
-                </div>
+            </div>
         </nav>
         <br />
 
@@ -140,43 +141,52 @@
             </div>
 
             <!-- Search Note-->
-            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" >
-                    <div id="search_note_alert">
-                        </div>
+            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                <div id="search_note_alert"></div>
                 <form id="search_note_form">
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label for="name">Name : </label>
+                            <label for="search_name">Name : </label>
                             <input type="text" class="form-control" id="search_name" placeholder="Name">
                         </div>
-                        <div class="form-group col-md-6">
-                            <label for="language">Language : </label>
-                            <input type="text" class="form-control" id="search_language" placeholder="Language">
+                        <div class="form-group col-md-3">
+                            <label for="search_category">Category : </label>
+                            <input type="text" class="form-control" id="search_category" placeholder="Category">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="search_type_selector">Type <sup style="color:red;font-size:16px">*</sup> :
+                            </label>
+                            <select class="form-control" id="search_type_selector" form="search_note_form">
+                                <option value="note" selected>Note</option>
+                                <option value="link">Link</option>
+                                <option value="tip">Tip</option>
+                                <option value="todo">Todo</option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="tags">Tags : </label>
+                        <label for="search_tags">Tags : </label>
                         <input type="text" class="form-control" id="search_tags" placeholder="Tags">
                     </div>
                     <div class="form-group">
-                        <label for="keywords">Keywords : </label>
+                        <label for="search_keywords">Keywords : </label>
                         <input type="text" class="form-control" id="search_keywords" placeholder="Keywords">
                     </div>
                     <div class="form-row">
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-xs-12 col-lg-5">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="start_date">Select Date ( From ): </label>
+                                    <label for="search_start_date">Select Date ( From ): </label>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <input id="search_start_date" type="date" name="date">
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-xs-offset-0 col-xs-12 col-lg-offset-2 col-lg-5">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="end_date">Select Date ( To ): </label>
+                                    <label for="search_end_date">Select Date ( To ): </label>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <input id="search_end_date" type="date" name="date">
@@ -186,9 +196,17 @@
                     </div>
                     <button type="button" id="search_note_submit_button" class="btn btn-primary btn-lg btn-block">Search</button>
                 </form>
+                <!-- top:0;
+                bottom: 0;
+                left: 0;
+                right: 0; -->
 
-                <div class="accordion" id="notes_diplay"  style="margin-bottom: 200px">
 
+                <div class="accordion" id="notes_diplay" style="margin-bottom: 200px"></div>
+                <div id="spinner_container">
+                    <div class="spinner-border text-primary" id="fetch_notes_spinner" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
                 </div>
             </div>
 
@@ -202,9 +220,18 @@
                             <label for="add_name">Name <sup style="color:red;font-size:16px">*</sup> : </label>
                             <input type="text" class="form-control" id="add_name" placeholder="Name">
                         </div>
-                        <div class="form-group col-md-6">
-                            <label for="add_language">Language <sup style="color:red;font-size:16px">*</sup> : </label>
-                            <input type="text" class="form-control" id="add_language" placeholder="Language">
+                        <div class="form-group col-md-3">
+                            <label for="add_language">Category <sup style="color:red;font-size:16px">*</sup> : </label>
+                            <input type="text" class="form-control" id="add_category" placeholder="Category">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="add_type_selector">Type <sup style="color:red;font-size:16px">*</sup> : </label>
+                            <select class="form-control" id="add_type_selector" form="add_note_form">
+                                <option value="note" selected>Note</option>
+                                <option value="link">Link</option>
+                                <option value="tip">Tip</option>
+                                <option value="todo">Todo</option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-group">
@@ -250,5 +277,3 @@
 </body>
 
 </html>
-
-    

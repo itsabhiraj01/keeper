@@ -1,8 +1,20 @@
 .center {
-    text-align: center;
-    border: 3px solid green;
-  }
+  text-align: center;
+  border: 3px solid green;
+}
 
-  .arrow-toggle {
-    position: relative;
-  }
+.arrow-toggle {
+  position: relative;
+}
+
+#fetch_notes_spinner {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  display: none
+}

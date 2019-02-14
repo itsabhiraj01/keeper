@@ -1,15 +1,9 @@
 console.log("index.js called");
-var name;
-var language;
-var tag;
-var note;
-var date;
-var keyword;
-var startDate;
-var endDate;
+var name, category, type, tag, note, date;
+var keyword, startDate, endDate;
 var noteData, noteKey;
 // var firebase;
-var noteRef;
+var noteRef, linkRef, tipRef, todoRef, allRef;
 
 window.onload = function () {
     document.getElementById("search_note_submit_button").onclick = fetch_note;
@@ -19,6 +13,10 @@ window.onload = function () {
 
     // firebase = firebase.database();    
     noteRef = firebase.database().ref('notes');
+    linkRef = firebase.database().ref('links');
+    tipRef = firebase.database().ref('tips');
+    todoRef = firebase.database().ref('todos');
+    allRef = firebase.database().ref('keeper-2923e');
 
     // tinymce.init({
     //     selector: '#add_note',
@@ -33,22 +31,26 @@ window.onload = function () {
 //Functon to Store data into firebase
 function fetch_note() {
     var nameField = document.getElementById('search_name');
-    var languageField = document.getElementById('search_language');
+    var categoryField = document.getElementById('search_category');
     var tagField = document.getElementById('search_tags');
     var keywordField = document.getElementById('search_keywords');
     var startDateField = document.getElementById('search_start_date');
     var endDateField = document.getElementById('search_end_date');
+    var typeField = document.getElementById('search_type_selector');
 
     name = nameField.value;
-    language = languageField.value;
+    category = categoryField.value;
     tag = tagField.value;
     keyword = keywordField.value;
     startDate = startDateField.value;
     endDate = endDateField.value;
+    type = typeField.options[typeField.selectedIndex].value;
+    console.log(typeField.options[typeField.selectedIndex].value);
 
     var userDetails = ""
     if (name) userDetails += "Name : " + name + "<br />";
-    if (language) userDetails += "Language : " + language + "<br />";
+    if (category) userDetails += "category : " + category + "<br />";
+    if (type) userDetails += "Type : " + type + "<br />";
     if (tag) userDetails += "Tag : " + tag + "<br />";
     if (keyword) userDetails += "Keyword : " + keyword + "<br />";
     if (startDate) userDetails += "StartDate : " + startDate + "<br />";
@@ -58,7 +60,7 @@ function fetch_note() {
 
         console.log("formValidation is initiated");
 
-        if (!(nameField.value || languageField.value || tagField.value || keywordField.value || startDateField.value || endDateField.value)) {
+        if (!(nameField.value || categoryField.value || tagField.value || keywordField.value || startDateField.value || endDateField.value || typeField.value)) {
             showAlert("search_note_alert", "alert-danger", null, "Form Validation Failed", null, "There must be atleast a single non empty field");
             return false;
         }
@@ -69,7 +71,8 @@ function fetch_note() {
     function clearFields() {
         console.log("clearFields is initiated");
         nameField.value = "";
-        languageField.value = "";
+        categoryField.value = "";
+        typeField.selectedIndex = 0;
         tagField.value = "";
         keywordField.value = "";
         startDateField.value = "";
@@ -83,8 +86,8 @@ function fetch_note() {
         // js.type = "text/javascript";
         // js.src = "/js/firebaseFetchData.js";
         // document.body.appendChild(js);
-        firebaseFetchData();
-        showAlert("search_note_alert", "alert-success", null, "Showing Results (Click on close button to clear Results)", null, userDetails);
+        firebaseFetchData(userDetails);
+        showAlert("search_note_alert", "alert-success", null, "Searching...", null, userDetails);
         hideElement("search_note_form");
 
     }
@@ -98,7 +101,8 @@ function fetch_note() {
 function upload_note() {
 
     var nameField = document.getElementById('add_name');
-    var languageField = document.getElementById('add_language');
+    var categoryField = document.getElementById('add_category');
+    var typeField = document.getElementById('add_type_selector');
     var tagField = document.getElementById('add_tags');
     var noteField = document.getElementById('add_note');
     // noteField.innerHTML = tinyMCE.activeEditor.getContent({format : 'raw'});
@@ -106,14 +110,15 @@ function upload_note() {
     var dateField = document.getElementById('add_date');
 
     name = nameField.value;
-    language = languageField.value;
+    category = categoryField.value;
     tag = tagField.value;
     note = noteField.value;
     date = dateField.value;
+    type = typeField.options[typeField.selectedIndex].value;
 
     console.log("assigned values");
 
-    var userDetails = "Name : " + name + "<br />Language : " + language +
+    var userDetails = "Name : " + name + "<br />category : " + category + "<br />Type : " + type +
         "<br />Tag : " + tag + "<br />Note : " + note + "<br />Date : " + date;
 
     function formValidation() {
@@ -125,11 +130,16 @@ function upload_note() {
             return false;
         }
         // console.log("name : " + nameField.value);
-        if (!(languageField.value)) {
-            showAlert("add_note_alert", "alert-danger", null, "Form Validation Failed", null, "Language can not be null");
+        if (!(categoryField.value)) {
+            showAlert("add_note_alert", "alert-danger", null, "Form Validation Failed", null, "category can not be null");
             return false;
         }
-        // console.log("languageField : " + languageField.value);
+        // console.log("categoryField : " + categoryField.value);
+        if (!(typeField.value)) {
+            showAlert("add_note_alert", "alert-danger", null, "Form Validation Failed", null, "type can not be null");
+            return false;
+        }
+        // console.log("TypeField : " + typeField.value);
         if (!(tagField.value)) {
             showAlert("add_note_alert", "alert-danger", null, "Form Validation Failed", null, "Tag can not be null");
             return false;
@@ -152,7 +162,8 @@ function upload_note() {
     function clearFields() {
         console.log("clearFields is initiated");
         nameField.value = "";
-        languageField.value = "";
+        categoryField.value = "";
+        typeField.value = "";
         tagField.value = "";
         noteField.value = "";
         fileField.value = "";
@@ -205,6 +216,11 @@ function showAlert(parent, alertClassName, headingClassName = "alert-heading", a
     alertCloseButton.innerHTML = '<span aria-hidden="true">&times;</span>';
     alertDiv.appendChild(alertCloseButton);
 
+    if (parent === "search_note_alert" && alertClassName === "alert-success alert  alert-dismissible fade show") {
+        showElement("fetch_notes_spinner");
+    }
+
+
     $(".alert").click(function () {
         showElement("search_note_form");
         $(".alert").alert('close')
@@ -229,7 +245,6 @@ function showAlert(parent, alertClassName, headingClassName = "alert-heading", a
     alertTextElement.innerHTML = alertText;
     console.log("AlertText : ", alertText);
     alertDiv.appendChild(alertTextElement);
-
 }
 
 
@@ -261,7 +276,7 @@ function filterData() {
                     preciselyFilteredData.push(noteData[i]);
                 } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
                     preciselyFilteredData.push(noteData[i])
-                } else if (language && noteData[i].language.toUpperCase() === language.toUpperCase()) {
+                } else if (category && noteData[i].category.toUpperCase() === category.toUpperCase()) {
                     preciselyFilteredData.push(noteData[i])
                 } else if (tag && noteData[i].tag.toUpperCase() === tag.toUpperCase()) {
                     preciselyFilteredData.push(noteData[i])
@@ -271,12 +286,12 @@ function filterData() {
                     filteredData.push(noteData[i]);
                 } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
                     filteredData.push(noteData[i])
-                } else if (language && noteData[i].language.toUpperCase().includes(language.toUpperCase())) {
+                } else if (category && noteData[i].category.toUpperCase().includes(category.toUpperCase())) {
                     filteredData.push(noteData[i])
                 } else if (tag && noteData[i].tag.toUpperCase().includes(tag.toUpperCase())) {
                     filteredData.push(noteData[i])
                 } else {
-                    if (!(name || keyword || language || tag)) {
+                    if (!(name || keyword || category || tag)) {
                         filteredData.push(noteData[i])
                     }
                 }
@@ -287,7 +302,7 @@ function filterData() {
                     preciselyFilteredData.push(noteData[i]);
                 } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
                     preciselyFilteredData.push(noteData[i])
-                } else if (language && noteData[i].language.toUpperCase() == language.toUpperCase()) {
+                } else if (category && noteData[i].category.toUpperCase() == category.toUpperCase()) {
                     preciselyFilteredData.push(noteData[i])
                 } else if (tag && noteData[i].tag.toUpperCase() == tag.toUpperCase()) {
                     preciselyFilteredData.push(noteData[i])
@@ -297,12 +312,12 @@ function filterData() {
                     filteredData.push(noteData[i]);
                 } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
                     filteredData.push(noteData[i])
-                } else if (language && noteData[i].language.toUpperCase().includes(language.toUpperCase())) {
+                } else if (category && noteData[i].category.toUpperCase().includes(category.toUpperCase())) {
                     filteredData.push(noteData[i])
                 } else if (tag && noteData[i].tag.toUpperCase().includes(tag.toUpperCase())) {
                     filteredData.push(noteData[i])
                 } else {
-                    if (!(name || keyword || language || tag)) {
+                    if (!(name || keyword || category || tag)) {
                         filteredData.push(noteData[i])
                     }
                 }
@@ -313,7 +328,7 @@ function filterData() {
                     preciselyFilteredData.push(noteData[i]);
                 } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
                     preciselyFilteredData.push(noteData[i])
-                } else if (language && noteData[i].language.toUpperCase() == language.toUpperCase()) {
+                } else if (category && noteData[i].category.toUpperCase() == category.toUpperCase()) {
                     preciselyFilteredData.push(noteData[i])
                 } else if (tag && noteData[i].tag.toUpperCase() == tag.toUpperCase()) {
                     preciselyFilteredData.push(noteData[i])
@@ -323,12 +338,12 @@ function filterData() {
                     filteredData.push(noteData[i]);
                 } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
                     filteredData.push(noteData[i])
-                } else if (language && noteData[i].language.toUpperCase().includes(language.toUpperCase())) {
+                } else if (category && noteData[i].category.toUpperCase().includes(category.toUpperCase())) {
                     filteredData.push(noteData[i])
                 } else if (tag && noteData[i].tag.toUpperCase().includes(tag.toUpperCase())) {
                     filteredData.push(noteData[i])
                 } else {
-                    if (!(name || keyword || language || tag)) {
+                    if (!(name || keyword || category || tag)) {
                         filteredData.push(noteData[i])
                     }
                 }
@@ -338,7 +353,7 @@ function filterData() {
                 preciselyFilteredData.push(noteData[i]);
             } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
                 preciselyFilteredData.push(noteData[i])
-            } else if (language && noteData[i].language.toUpperCase() == language.toUpperCase()) {
+            } else if (category && noteData[i].category.toUpperCase() == category.toUpperCase()) {
                 preciselyFilteredData.push(noteData[i])
             } else if (tag && noteData[i].tag.toUpperCase() == tag.toUpperCase()) {
                 preciselyFilteredData.push(noteData[i])
@@ -348,12 +363,12 @@ function filterData() {
                 filteredData.push(noteData[i]);
             } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
                 filteredData.push(noteData[i])
-            } else if (language && noteData[i].language.toUpperCase().includes(language.toUpperCase())) {
+            } else if (category && noteData[i].category.toUpperCase().includes(category.toUpperCase())) {
                 filteredData.push(noteData[i])
             } else if (tag && noteData[i].tag.toUpperCase().includes(tag.toUpperCase())) {
                 filteredData.push(noteData[i])
             } else {
-                if (!(name || keyword || language || tag)) {
+                if (!(name || keyword || category || tag)) {
                     filteredData.push(noteData[i])
                 }
             }
@@ -379,7 +394,15 @@ function addToNoteDisplay(note, count) {
     //Add head
     var innerDiv = document.createElement("div");
     innerDiv.setAttribute("class", "card-header");
+    // if (count == 0)
+    // innerDiv.setAttribute("class", "card-header btn btn-link");
+    // else
+    //     innerDiv.setAttribute("class", "card-header btn btn-link collapsed");
     innerDiv.setAttribute("id", "heading" + count);
+    innerDiv.setAttribute("data-toggle", "collapse");
+    innerDiv.setAttribute("data-target", "#collapse" + count);
+    innerDiv.setAttribute("aria-expanded", "true");
+    innerDiv.setAttribute("aria-controls", "collapse" + count);
     card.appendChild(innerDiv);
 
     var h2Ele = document.createElement("h2");
@@ -387,29 +410,21 @@ function addToNoteDisplay(note, count) {
     innerDiv.appendChild(h2Ele)
 
     var buttonArrow = document.createElement("button");
-    if (count == 0)
-        buttonArrow.setAttribute("class", "btn btn-link");
-    else
-        buttonArrow.setAttribute("class", "btn btn-link collapsed");
+    // if (count == 0)
+    buttonArrow.setAttribute("class", "btn btn-link");
+    // else
+    // buttonArrow.setAttribute("class", "btn btn-link collapsed");
     buttonArrow.setAttribute("type", "button");
-    buttonArrow.setAttribute("data-toggle", "collapse");
-    buttonArrow.setAttribute("data-target", "#collapse" + count);
-    buttonArrow.setAttribute("aria-expanded", "true");
-    buttonArrow.setAttribute("aria-controls", "collapse" + count);
     buttonArrow.innerHTML = '</h3><i class="fas fa-arrow-circle-down arrow-toggle"></i>';
     h2Ele.appendChild(buttonArrow);
 
 
     var button = document.createElement("button");
-    if (count === 0)
-        button.setAttribute("class", "btn btn-link");
-    else
-        button.setAttribute("class", "btn btn-link collapsed");
+    // if (count === 0)
+    button.setAttribute("class", "btn btn-link");
+    // else
+    //     button.setAttribute("class", "btn btn-link collapsed");
     button.setAttribute("type", "button");
-    button.setAttribute("data-toggle", "collapse");
-    button.setAttribute("data-target", "#collapse" + count);
-    button.setAttribute("aria-expanded", "true");
-    button.setAttribute("aria-controls", "collapse" + count);
     button.innerHTML = '<h3>' + note.name + '</h3>';
     h2Ele.appendChild(button);
 
@@ -431,7 +446,7 @@ function addToNoteDisplay(note, count) {
     note.note = note.note.split(" ").join("&nbsp;");
     note.note = note.note.split("\n").join("<br />");
 
-    innerDiv2.innerHTML = "<h6>Name : " + note.name + "</h6>" + "<br />Language : " + note.language + "<br />Tags :" + note.tag + "<br />Date :" + note.date + "<br />Note : " + note.note;
+    innerDiv2.innerHTML = "<h6>Name : " + note.name + "</h6>" + "<br />category : " + note.category + "<br />Tags :" + note.tag + "<br />Date :" + note.date + "<br />Note : " + note.note;
     innerDiv.appendChild(innerDiv2);
 
 }
@@ -452,7 +467,25 @@ function removeChilds(id) {
     }
 }
 
-function firebaseFetchData() {
+function firebaseFetchData(userDetails) {
+    var ref;
+    switch (type) {
+        case "note":
+            ref = noteRef;
+            break;
+        case "link":
+            ref = linkRef;
+            break;
+        case "tip":
+            ref = tipRef;
+            break;
+        case "todo":
+            ref = todoRef;
+            break;
+        default:
+            alert("Type must be defined")
+            ref = noteRef;
+    }
     console.log("firebaseFetchData.js called");
     var count = 0;
     noteKey = [];
@@ -460,9 +493,7 @@ function firebaseFetchData() {
     // Fetch data from firebase
     (function () {
         console.log("fetching from firebase")
-        // noteRef.push({ name: name, language: language, tag: tag, note:note, date: date});
-        // var notes = noteRef.orderByChild('date');
-        noteRef.once('value', function (snapshot) {
+        ref.once('value', function (snapshot) {
             snapshot.forEach(function (childSnapshot) {
                 var childKey = childSnapshot.key;
                 noteKey.push(childKey);
@@ -472,7 +503,9 @@ function firebaseFetchData() {
                 console.log("child Data : ", childData);
             });
             console.log("fetched all data");
+            showAlert("search_note_alert", "alert-success", null, "Showing " + noteData.length + " Results (double tap to close)", null, userDetails);
             filterData();
+            hideElement("fetch_notes_spinner");
         });
         // console.log(noteData);
     }());
@@ -480,11 +513,45 @@ function firebaseFetchData() {
 
 function firebaseSaveData() {
     console.log("firebaseSaveData.js called");
-    
+
     // Save data to firebase
     (function () {
         console.log("pushing to firebase")
-        noteRef.push({ name: name, language: language, tag: tag, note: note, date: date });
+        switch (type) {
+            case "note":
+                noteRef.push({ name: name, category: category, tag: tag, note: note, date: date });
+                break;
+            case "link":
+                linkRef.push({ name: name, category: category, tag: tag, note: note, date: date });
+                break;
+            case "tip":
+                tipRef.push({ name: name, category: category, tag: tag, note: note, date: date });
+                break;
+            case "todo":
+                todoRef.push({ name: name, category: category, tag: tag, note: note, date: date });
+                break;
+            default:
+                alert("No type found");
+        }
         console.log("pushed to firebase");
     }());
 }
+
+// var type = document.getElementById("activitySelector");
+
+// type.addEventListener("click", function() {
+//     var options = type.querySelectorAll("option");
+//     var count = options.length;
+
+// });
+
+// type.addEventListener("change", function() {
+//     if(type.value == "note")
+//     {
+//         addActivityItem();
+//     } else if(type.value == "note") {
+
+//     } else if(type.value == "link") {
+
+//     }
+// });
