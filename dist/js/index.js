@@ -411,22 +411,18 @@ function addToNoteDisplay(note, count) {
     h2Ele.setAttribute("class", "mb-0 panel-title");
     innerDiv.appendChild(h2Ele)
 
-    var buttonArrow = document.createElement("button");
-    // if (count == 0)
-    buttonArrow.setAttribute("class", "btn btn-link");
-    // else
-    // buttonArrow.setAttribute("class", "btn btn-link collapsed");
-    buttonArrow.setAttribute("type", "button");
-    buttonArrow.innerHTML = '</h3><i class="fas fa-arrow-circle-down arrow-toggle"></i>';
-    h2Ele.appendChild(buttonArrow);
+    // var buttonArrow = document.createElement("button");
+    // buttonArrow.setAttribute("class", "btn btn-link");
+    // buttonArrow.setAttribute("type", "button");
+    // buttonArrow.innerHTML = '</h3><i class="fas fa-arrow-circle-down arrow-toggle"></i>';
+    // h2Ele.appendChild(buttonArrow);
 
 
-    var button = document.createElement("button");
-    // if (count === 0)
-    button.setAttribute("class", "btn btn-link");
-    // else
-    //     button.setAttribute("class", "btn btn-link collapsed");
-    button.setAttribute("type", "button");
+    // var button = document.createElement("button");
+    var button = document.createElement("p");
+    // button.setAttribute("class", "btn btn-link");
+    button.setAttribute("class", "text-primary");
+    // button.setAttribute("type", "button");
     button.innerHTML = '<h3>' + note.name + '</h3>';
     h2Ele.appendChild(button);
 
@@ -489,7 +485,7 @@ function firebaseFetchData(userDetails) {
             ref = noteRef;
     }
     console.log("firebaseFetchData.js called");
-    var count = 0;
+
     noteKey = [];
     noteData = [];
     // Fetch data from firebase
