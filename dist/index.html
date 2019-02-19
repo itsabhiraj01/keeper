@@ -58,7 +58,7 @@
 <body class="container bg-light">
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    
+
     <div class="container">
 
         <!-- <h1>Welcome to Keeper</h1> -->
@@ -83,12 +83,16 @@
                     aria-controls="pills-home" aria-selected="true">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab"
-                    aria-controls="pills-profile" aria-selected="false">Search Note</a>
+                <a class="nav-link" id="pills-search-tab" data-toggle="pill" href="#pills-search" role="tab"
+                    aria-controls="pills-search" aria-selected="false">Search Note</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab"
-                    aria-controls="pills-contact" aria-selected="false">Add Note</a>
+                <a class="nav-link" id="pills-add-tab" data-toggle="pill" href="#pills-add" role="tab" aria-controls="pills-add"
+                    aria-selected="false">Add Note</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-edit-tab" data-toggle="pill" href="#pills-edit" role="tab" aria-controls="pills-edit"
+                    aria-selected="false">Edit Note</a>
             </li>
         </ul>
 
@@ -143,7 +147,7 @@
             </div>
 
             <!-- Search Note-->
-            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <div class="tab-pane fade" id="pills-search" role="tabpanel" aria-labelledby="pills-search-tab">
                 <div id="search_note_alert"></div>
                 <form id="search_note_form">
                     <div class="form-row">
@@ -213,7 +217,7 @@
             </div>
 
             <!-- Add Note -->
-            <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+            <div class="tab-pane fade" id="pills-add" role="tabpanel" aria-labelledby="pills-add-tab">
                 <div id="add_note_alert">
                 </div>
                 <form id="add_note_form" style="margin-bottom: 200px">
@@ -223,7 +227,7 @@
                             <input type="text" class="form-control" id="add_name" placeholder="Name">
                         </div>
                         <div class="form-group col-md-3">
-                            <label for="add_language">Category <sup style="color:red;font-size:16px">*</sup> : </label>
+                            <label for="add_category">Category <sup style="color:red;font-size:16px">*</sup> : </label>
                             <input type="text" class="form-control" id="add_category" placeholder="Category">
                         </div>
                         <div class="form-group col-md-3">
@@ -270,6 +274,60 @@
                         </div>
                     </div>
                     <button id="add_note_submit_button" type="button" class="btn btn-primary btn-lg btn-block">Add</button>
+                </form>
+            </div>
+
+            <!-- Edit Note -->
+            <div class="tab-pane fade" id="pills-edit" role="tabpanel" aria-labelledby="pills-edit-tab">
+                <div id="edit_note_alert">
+                </div>
+                <!-- Find Note -->
+                <div id="find_note_alert">
+                    </div>
+                <form id="find_note_form">
+                    <div class="form-group col-md-12 col-xs-12" style="padding:10px;">
+                        <div class="form-row">
+                            <div class="form-group col-md-8 col-xs-8" style="align:center">
+                                <input id="find_note_key" class="form-control" type="text" placeholder="Enter note key..."
+                                    value="-LYX2ohCvbkl3Ox-PJls">
+                            </div>
+                            <div class="form-group col-md-4 col-xs-4">
+                                <select class="form-control" id="edit_type_selector" form="edit_note_form">
+                                    <option value="note" selected>Note</option>
+                                    <option value="link">Link</option>
+                                    <option value="tip">Tip</option>
+                                    <option value="todo">Todo</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="find_note_submit_button" type="button" class="btn btn-primary btn-lg btn-block">Find</button>
+                    <br />
+                    <!-- <a  id="forgot_key" data-toggle="pill" href="#pills-search-tab" role="tab" aria-controls="pills-search" aria-selected="false">Forgot Key? Click here to find key.</a> -->
+                    <a id="forgot_key" href="#pills-search">"Forgot Key? Click here to find key."</a>
+                </form>
+
+                <form id="edit_note_form" style="margin-bottom: 200px; display: none">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="edit_name">Name <sup style="color:red;font-size:16px">*</sup> : </label>
+                            <input type="text" class="form-control" id="edit_name" placeholder="Name">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="edit_category">Category <sup style="color:red;font-size:16px">*</sup> : </label>
+                            <input type="text" class="form-control" id="edit_category" placeholder="Category">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_tags">Tags <sup style="color:red;font-size:16px">*</sup> : </label>
+                        <input type="text" class="form-control" id="edit_tags" placeholder="Tags">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_note">Note <sup style="color:red;font-size:16px">*</sup> : </label>
+                        <textarea class="form-control" rows="10" id="edit_note" placeholder="Either enter text or select a file below..."></textarea>
+                    </div>
+                    <button id="edit_note_submit_button" type="button" class="btn btn-primary btn-lg btn-block">Edit</button>
                 </form>
             </div>
         </div>

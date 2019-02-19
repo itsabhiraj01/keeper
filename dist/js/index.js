@@ -7,10 +7,14 @@ var userDeatils;
 var noteRef, linkRef, tipRef, todoRef, allRef;
 
 window.onload = function () {
-    document.getElementById("search_note_submit_button").onclick = fetch_note;
+    document.getElementById("search_note_submit_button").onclick = fetch_notes;
     document.getElementById("add_note_submit_button").onclick = upload_note;
+    document.getElementById("find_note_submit_button").onclick = find_note;
+    document.getElementById("edit_note_submit_button").onclick = edit_note;
+    document.getElementById('forgot_key').onclick = forgot_key;
     document.getElementById("add_date").valueAsDate = new Date();
     document.getElementById("search_end_date").valueAsDate = new Date();
+
 
     // firebase = firebase.database();    
     noteRef = firebase.database().ref('notes');
@@ -29,8 +33,63 @@ window.onload = function () {
 
 }
 
+function forgot_key(event) {
+    $('a[href="' + $(this).attr('href') + '"]').tab('show');
+}
+
+function find_note() {
+    var noteFound;
+    var path = '';
+    if (document.getElementById('find_note_key').value) {
+        if (document.getElementById('edit_type_selector').options.selectedIndex == 0) {
+            path = 'notes/';
+        } else if (document.getElementById('edit_type_selector').options.selectedIndex == 1) {
+            path = 'links/';
+        } else if (document.getElementById('edit_type_selector').options.selectedIndex == 2) {
+            path = 'tips/';
+        } else if (document.getElementById('edit_type_selector').options.selectedIndex == 3) {
+            path = 'todos/';
+        } else {
+            path = 'notes/'
+        }
+        var ref = firebase.database().ref(path);
+        ref.once('value', function (snapshot) {
+            snapshot.forEach(function (childSnapshot) {
+                if (childSnapshot.key === document.getElementById('find_note_key').value) {
+                    console.log(childSnapshot.val());
+                    noteFound = childSnapshot.val();
+                }
+            });
+            console.log("note : ", noteFound);
+            if (noteFound) {
+                hideElement("find_note_form");
+                setValuesInEditForm(noteFound);
+                showElement("edit_note_form");
+            } else {
+                showAlert("find_note_alert", "alert-danger", null, "Note not found!", null, "Either the selected type is wrong or key is Invalid.");
+            }
+        });
+    } else {
+        showAlert("find_note_alert", "alert-danger", null, "Empty key!", null, "Key cannot be null.");
+    }
+
+}
+
+function setValuesInEditForm(note) {
+    document.getElementById('edit_name').value = note.name;
+    document.getElementById('edit_category').value = note.category;
+    document.getElementById('edit_type_selector').options;
+    document.getElementById('edit_tags').value = note.tag;
+    document.getElementById('edit_note').value = note.note;
+}
+
+function edit_note() {
+    showElement("find_note_form");
+    hideElement("edit_note_form");
+}
+
 //Functon to Store data into firebase
-function fetch_note() {
+function fetch_notes() {
     var nameField = document.getElementById('search_name');
     var categoryField = document.getElementById('search_category');
     var tagField = document.getElementById('search_tags');
@@ -286,7 +345,7 @@ function filterData() {
             preciselyFilteredData.push(noteData[i])
             preciselyFilteredKey.push(noteKey[i])
         }
-    
+
         else if (name && noteData[i].name.toUpperCase().includes(name.toUpperCase())) {
             filteredData.push(noteData[i]);
             filteredKey.push(noteKey[i]);
@@ -306,7 +365,7 @@ function filterData() {
             }
         }
     }
-    
+
     for (i = 0; i < noteData.length; i++) {
         currentDateObject = new Date(noteData[i].date);
         if (endDate && startDate) {
@@ -328,17 +387,17 @@ function filterData() {
     var notes = preciselyFilteredData.concat(filteredData);
     var keys = preciselyFilteredKey.concat(filteredKey);
     showAlert("search_note_alert", "alert-success", null, "Showing " + notes.length + " Results (double tap to close)", null, userDetails);
-    show_notes(notes,keys);
+    show_notes(notes, keys);
 }
 
 
-function show_notes(notes,keys) {
+function show_notes(notes, keys) {
     removeChilds("notes_diplay");
     for (var i = 0; i < notes.length; i++)
-        addToNoteDisplay(notes[i],keys[i], i);
+        addToNoteDisplay(notes[i], keys[i], i);
 }
 
-function addToNoteDisplay(note,key, count) {
+function addToNoteDisplay(note, key, count) {
     var container = document.getElementById("notes_diplay");
     var card = document.createElement("div");
     card.setAttribute("class", "card");
@@ -346,7 +405,7 @@ function addToNoteDisplay(note,key, count) {
 
     //Add head
     var outerDiv = document.createElement("div");
-    outerDiv.setAttribute("class","col-xs-12-nw")
+    outerDiv.setAttribute("class", "col-xs-12-nw")
     card.appendChild(outerDiv);
 
     var innerDiv = document.createElement("div");
@@ -364,13 +423,13 @@ function addToNoteDisplay(note,key, count) {
     innerDiv.appendChild(h2Ele)
 
     var editDiv = document.createElement("div");
-    editDiv.setAttribute("id","edit");
+    editDiv.setAttribute("id", "edit");
     editDiv.setAttribute("class", "card-header col-xs-2-nw pointer");
-    editDiv.setAttribute("onClick",'editClickListener("'+key+'");')
+    editDiv.setAttribute("onClick", 'editClickListener("' + key + '");')
     outerDiv.appendChild(editDiv);
 
     var h2Ele2 = document.createElement("h3");
-    h2Ele2.setAttribute("class","mb-0 panel-title text-primary");
+    h2Ele2.setAttribute("class", "mb-0 panel-title text-primary");
     h2Ele2.innerHTML = '<i class="fas fa-edit"></i>';
     editDiv.appendChild(h2Ele2);
 
