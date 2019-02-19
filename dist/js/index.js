@@ -266,165 +266,113 @@ var openFile = function (event) {
 function filterData() {
     var filteredData = [];
     var preciselyFilteredData = [];
+    var filteredKey = [];
+    var preciselyFilteredKey = [];
     var startDateObejct = new Date(startDate);
     var endDateObject = new Date(endDate);
     var currentDateObject;
+
+    function addToNotesPriorityList() {
+        if (name && noteData[i].name.toUpperCase() === name.toUpperCase()) {
+            preciselyFilteredData.push(noteData[i]);
+            preciselyFilteredKey.push(noteKey[i]);
+        } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
+            preciselyFilteredData.push(noteData[i])
+            preciselyFilteredKey.push(noteKey[i])
+        } else if (category && noteData[i].category.toUpperCase() === category.toUpperCase()) {
+            preciselyFilteredData.push(noteData[i])
+            preciselyFilteredKey.push(noteKey[i])
+        } else if (tag && noteData[i].tag.toUpperCase() === tag.toUpperCase()) {
+            preciselyFilteredData.push(noteData[i])
+            preciselyFilteredKey.push(noteKey[i])
+        }
+    
+        else if (name && noteData[i].name.toUpperCase().includes(name.toUpperCase())) {
+            filteredData.push(noteData[i]);
+            filteredKey.push(noteKey[i]);
+        } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
+            filteredData.push(noteData[i])
+            filteredKey.push(noteKey[i])
+        } else if (category && noteData[i].category.toUpperCase().includes(category.toUpperCase())) {
+            filteredData.push(noteData[i])
+            filteredKey.push(noteKey[i])
+        } else if (tag && noteData[i].tag.toUpperCase().includes(tag.toUpperCase())) {
+            filteredData.push(noteData[i])
+            filteredKey.push(noteKey[i])
+        } else {
+            if (!(name || keyword || category || tag)) {
+                filteredData.push(noteData[i])
+                filteredKey.push(noteKey[i])
+            }
+        }
+    }
+    
     for (i = 0; i < noteData.length; i++) {
         currentDateObject = new Date(noteData[i].date);
         if (endDate && startDate) {
             if (currentDateObject.getTime() >= startDateObejct.getTime() && currentDateObject.getTime() <= endDateObject.getTime()) {
-                if (name && noteData[i].name.toUpperCase() === name.toUpperCase()) {
-                    preciselyFilteredData.push(noteData[i]);
-                } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
-                    preciselyFilteredData.push(noteData[i])
-                } else if (category && noteData[i].category.toUpperCase() === category.toUpperCase()) {
-                    preciselyFilteredData.push(noteData[i])
-                } else if (tag && noteData[i].tag.toUpperCase() === tag.toUpperCase()) {
-                    preciselyFilteredData.push(noteData[i])
-                }
-
-                else if (name && noteData[i].name.toUpperCase().includes(name.toUpperCase())) {
-                    filteredData.push(noteData[i]);
-                } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
-                    filteredData.push(noteData[i])
-                } else if (category && noteData[i].category.toUpperCase().includes(category.toUpperCase())) {
-                    filteredData.push(noteData[i])
-                } else if (tag && noteData[i].tag.toUpperCase().includes(tag.toUpperCase())) {
-                    filteredData.push(noteData[i])
-                } else {
-                    if (!(name || keyword || category || tag)) {
-                        filteredData.push(noteData[i])
-                    }
-                }
+                addToNotesPriorityList();
             }
         } else if (startDate) {
             if (currentDateObject.getTime() >= startDateObejct.getTime()) {
-                if (name && noteData[i].name.toUpperCase() == name.toUpperCase()) {
-                    preciselyFilteredData.push(noteData[i]);
-                } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
-                    preciselyFilteredData.push(noteData[i])
-                } else if (category && noteData[i].category.toUpperCase() == category.toUpperCase()) {
-                    preciselyFilteredData.push(noteData[i])
-                } else if (tag && noteData[i].tag.toUpperCase() == tag.toUpperCase()) {
-                    preciselyFilteredData.push(noteData[i])
-                }
-
-                else if (name && noteData[i].name.toUpperCase().includes(name.toUpperCase())) {
-                    filteredData.push(noteData[i]);
-                } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
-                    filteredData.push(noteData[i])
-                } else if (category && noteData[i].category.toUpperCase().includes(category.toUpperCase())) {
-                    filteredData.push(noteData[i])
-                } else if (tag && noteData[i].tag.toUpperCase().includes(tag.toUpperCase())) {
-                    filteredData.push(noteData[i])
-                } else {
-                    if (!(name || keyword || category || tag)) {
-                        filteredData.push(noteData[i])
-                    }
-                }
+                addToNotesPriorityList();
             }
         } else if (endDate) {
             if (currentDateObject.getTime() <= endDateObject.getTime()) {
-                if (name && noteData[i].name.toUpperCase() == name.toUpperCase()) {
-                    preciselyFilteredData.push(noteData[i]);
-                } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
-                    preciselyFilteredData.push(noteData[i])
-                } else if (category && noteData[i].category.toUpperCase() == category.toUpperCase()) {
-                    preciselyFilteredData.push(noteData[i])
-                } else if (tag && noteData[i].tag.toUpperCase() == tag.toUpperCase()) {
-                    preciselyFilteredData.push(noteData[i])
-                }
-
-                else if (name && noteData[i].name.toUpperCase().includes(name.toUpperCase())) {
-                    filteredData.push(noteData[i]);
-                } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
-                    filteredData.push(noteData[i])
-                } else if (category && noteData[i].category.toUpperCase().includes(category.toUpperCase())) {
-                    filteredData.push(noteData[i])
-                } else if (tag && noteData[i].tag.toUpperCase().includes(tag.toUpperCase())) {
-                    filteredData.push(noteData[i])
-                } else {
-                    if (!(name || keyword || category || tag)) {
-                        filteredData.push(noteData[i])
-                    }
-                }
+                addToNotesPriorityList();
             }
         } else {
-            if (name && noteData[i].name.toUpperCase() == name.toUpperCase()) {
-                preciselyFilteredData.push(noteData[i]);
-            } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
-                preciselyFilteredData.push(noteData[i])
-            } else if (category && noteData[i].category.toUpperCase() == category.toUpperCase()) {
-                preciselyFilteredData.push(noteData[i])
-            } else if (tag && noteData[i].tag.toUpperCase() == tag.toUpperCase()) {
-                preciselyFilteredData.push(noteData[i])
-            }
-
-            else if (name && noteData[i].name.toUpperCase().includes(name.toUpperCase())) {
-                filteredData.push(noteData[i]);
-            } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
-                filteredData.push(noteData[i])
-            } else if (category && noteData[i].category.toUpperCase().includes(category.toUpperCase())) {
-                filteredData.push(noteData[i])
-            } else if (tag && noteData[i].tag.toUpperCase().includes(tag.toUpperCase())) {
-                filteredData.push(noteData[i])
-            } else {
-                if (!(name || keyword || category || tag)) {
-                    filteredData.push(noteData[i])
-                }
-            }
-
+            addToNotesPriorityList();
         }
     }
     var notes = preciselyFilteredData.concat(filteredData);
+    var keys = preciselyFilteredKey.concat(filteredKey);
     showAlert("search_note_alert", "alert-success", null, "Showing " + notes.length + " Results (double tap to close)", null, userDetails);
-    show_notes(notes);
+    show_notes(notes,keys);
 }
 
-function show_notes(notes) {
+
+function show_notes(notes,keys) {
     removeChilds("notes_diplay");
     for (var i = 0; i < notes.length; i++)
-        addToNoteDisplay(notes[i], i);
+        addToNoteDisplay(notes[i],keys[i], i);
 }
 
-function addToNoteDisplay(note, count) {
+function addToNoteDisplay(note,key, count) {
     var container = document.getElementById("notes_diplay");
     var card = document.createElement("div");
-    card.setAttribute("class", "card")
+    card.setAttribute("class", "card");
     container.appendChild(card);
 
     //Add head
+    var outerDiv = document.createElement("div");
+    outerDiv.setAttribute("class","col-xs-12-nw")
+    card.appendChild(outerDiv);
+
     var innerDiv = document.createElement("div");
-    innerDiv.setAttribute("class", "card-header");
-    // if (count == 0)
-    // innerDiv.setAttribute("class", "card-header btn btn-link");
-    // else
-    //     innerDiv.setAttribute("class", "card-header btn btn-link collapsed");
+    innerDiv.setAttribute("class", "card-header col-xs-10-nw pointer");
     innerDiv.setAttribute("id", "heading" + count);
     innerDiv.setAttribute("data-toggle", "collapse");
     innerDiv.setAttribute("data-target", "#collapse" + count);
     innerDiv.setAttribute("aria-expanded", "true");
     innerDiv.setAttribute("aria-controls", "collapse" + count);
-    card.appendChild(innerDiv);
+    outerDiv.appendChild(innerDiv);
 
-    var h2Ele = document.createElement("h2");
-    h2Ele.setAttribute("class", "mb-0 panel-title");
+    var h2Ele = document.createElement("h3");
+    h2Ele.setAttribute("class", "mb-0 panel-title text-primary");
+    h2Ele.innerHTML = note.name;
     innerDiv.appendChild(h2Ele)
 
-    // var buttonArrow = document.createElement("button");
-    // buttonArrow.setAttribute("class", "btn btn-link");
-    // buttonArrow.setAttribute("type", "button");
-    // buttonArrow.innerHTML = '</h3><i class="fas fa-arrow-circle-down arrow-toggle"></i>';
-    // h2Ele.appendChild(buttonArrow);
+    var editDiv = document.createElement("div");
+    editDiv.setAttribute("id","edit");
+    editDiv.setAttribute("class", "card-header col-xs-2-nw pointer");
+    editDiv.setAttribute("onClick",'editClickListener("'+key+'");')
+    outerDiv.appendChild(editDiv);
 
-
-    // var button = document.createElement("button");
-    var button = document.createElement("p");
-    // button.setAttribute("class", "btn btn-link");
-    button.setAttribute("class", "text-primary");
-    // button.setAttribute("type", "button");
-    button.innerHTML = '<h3>' + note.name + '</h3>';
-    h2Ele.appendChild(button);
+    var h2Ele2 = document.createElement("h3");
+    h2Ele2.setAttribute("class","mb-0 panel-title text-primary");
+    h2Ele2.innerHTML = '<i class="fas fa-edit"></i>';
+    editDiv.appendChild(h2Ele2);
 
     //Add body
     innerDiv = document.createElement("div");
@@ -437,13 +385,12 @@ function addToNoteDisplay(note, count) {
     innerDiv.setAttribute("data-parent", "#notes_diplay");
     card.appendChild(innerDiv);
 
-    var innerDiv2 = document.createElement("div");
-    innerDiv2.setAttribute("class", "card-body");
-
     note.note = note.note.split("\t").join("&nbsp;&nbsp;&nbsp;&nbsp;");
     note.note = note.note.split(" ").join("&nbsp;");
     note.note = note.note.split("\n").join("<br />");
 
+    var innerDiv2 = document.createElement("div");
+    innerDiv2.setAttribute("class", "card-body");
     innerDiv2.innerHTML = "<h6>Name : " + note.name + "</h6>" + "<br />category : " + note.category + "<br />Tags :" + note.tag + "<br />Date :" + note.date + "<br />Note : " + note.note;
     innerDiv.appendChild(innerDiv2);
 
@@ -534,21 +481,6 @@ function firebaseSaveData() {
     }());
 }
 
-// var type = document.getElementById("activitySelector");
-
-// type.addEventListener("click", function() {
-//     var options = type.querySelectorAll("option");
-//     var count = options.length;
-
-// });
-
-// type.addEventListener("change", function() {
-//     if(type.value == "note")
-//     {
-//         addActivityItem();
-//     } else if(type.value == "note") {
-
-//     } else if(type.value == "link") {
-
-//     }
-// });
+function editClickListener(key) {
+    alert(key);
+}
