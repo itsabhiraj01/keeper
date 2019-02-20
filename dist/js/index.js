@@ -7,10 +7,15 @@ var userDeatils;
 var noteRef, linkRef, tipRef, todoRef, allRef;
 
 window.onload = function () {
-    document.getElementById("search_note_submit_button").onclick = fetch_note;
+    document.getElementById("search_note_submit_button").onclick = fetch_notes;
     document.getElementById("add_note_submit_button").onclick = upload_note;
+    document.getElementById("find_note_submit_button").onclick = find_note;
+    document.getElementById("edit_note_submit_button").onclick = edit_note;
+    document.getElementById("delete_note_submit_button").onclick = delete_note;
+    document.getElementById('forgot_key').onclick = forgot_key;
     document.getElementById("add_date").valueAsDate = new Date();
     document.getElementById("search_end_date").valueAsDate = new Date();
+
 
     // firebase = firebase.database();    
     noteRef = firebase.database().ref('notes');
@@ -29,8 +34,109 @@ window.onload = function () {
 
 }
 
+function forgot_key(event) {
+    $('a[href="#pills-search"]').tab('show');
+}
+
+
+function find_note() {
+    var noteFound;
+    var path = '';
+    if (document.getElementById('find_note_key').value) {
+        if (document.getElementById('edit_type_selector').options.selectedIndex == 0) {
+            path = 'notes/';
+        } else if (document.getElementById('edit_type_selector').options.selectedIndex == 1) {
+            path = 'links/';
+        } else if (document.getElementById('edit_type_selector').options.selectedIndex == 2) {
+            path = 'tips/';
+        } else if (document.getElementById('edit_type_selector').options.selectedIndex == 3) {
+            path = 'todos/';
+        } else {
+            path = 'notes/'
+        }
+        var ref = firebase.database().ref(path);
+        ref.once('value', function (snapshot) {
+            snapshot.forEach(function (childSnapshot) {
+                if (childSnapshot.key === document.getElementById('find_note_key').value) {
+                    console.log(childSnapshot.val());
+                    noteFound = childSnapshot.val();
+                }
+            });
+            console.log("note : ", noteFound);
+            if (noteFound) {
+                hideElement('forgot_key');
+                hideElement("find_note_form");
+                setValuesInEditForm(noteFound);
+                showElement("edit_note_form");
+            } else {
+                showAlert("find_note_alert", "alert-danger", null, "Note not found!", null, "Either the selected type is wrong or key is Invalid.");
+            }
+        });
+    } else {
+        showAlert("find_note_alert", "alert-danger", null, "Empty key!", null, "Key cannot be null.");
+    }
+
+}
+
+function setValuesInEditForm(note) {
+    document.getElementById('edit_name').value = note.name;
+    document.getElementById('edit_category').value = note.category;
+    document.getElementById('edit_type_selector').options;
+    document.getElementById('edit_tags').value = note.tag;
+    document.getElementById('edit_note').value = note.note;
+}
+
+function edit_note() {
+    showElement("find_note_form");
+    showElement("forgot_key");
+    hideElement("edit_note_form");
+    var key = document.getElementById('find_note_key').value;
+    update_note(key);
+
+}
+
+//On click listener  of Delete button
+function delete_note(key) {
+
+    showElement("find_note_form");
+    showElement("forgot_key");
+    hideElement("edit_note_form");
+    var key = document.getElementById('find_note_key').value;
+
+    var nameField = document.getElementById('edit_name');
+    var categoryField = document.getElementById('edit_category');
+    var tagField = document.getElementById('edit_tags');
+    var noteField = document.getElementById('edit_note');
+
+    name = nameField.value;
+    category = categoryField.value;
+    tag = tagField.value;
+    note = noteField.value;
+
+    function clearFields() {
+        console.log("clearFields is initiated");
+        document.getElementById('find_note_key').value = "";
+        document.getElementById('edit_type_selector').options.selectedIndex = 0;
+    }
+
+    console.log("assigned values");
+
+    userDetails = "Name : " + name + "<br />category : " + category +
+        "<br />Tag : " + tag + "<br />Note : " + note;
+
+    var success = firebaseRemoveData(key);
+
+    if (success) {
+        showAlert("edit_note_alert", "alert-success", null, "Note Removed!", null, userDetails);
+        clearFields();
+    }
+    else
+        showAlert("edit_note_alert", "alert-danger", null, "Note updation Failed!", null, "Firebase error!");
+
+}
+
 //Functon to Store data into firebase
-function fetch_note() {
+function fetch_notes() {
     var nameField = document.getElementById('search_name');
     var categoryField = document.getElementById('search_category');
     var tagField = document.getElementById('search_tags');
@@ -189,6 +295,79 @@ function upload_note() {
 
 }
 
+//Function to push data to firebase
+function update_note(key) {
+
+    var nameField = document.getElementById('edit_name');
+    var categoryField = document.getElementById('edit_category');
+    var tagField = document.getElementById('edit_tags');
+    var noteField = document.getElementById('edit_note');
+
+    name = nameField.value;
+    category = categoryField.value;
+    tag = tagField.value;
+    note = noteField.value;
+
+    console.log("assigned values");
+
+    userDetails = "Name : " + name + "<br />category : " + category +
+        "<br />Tag : " + tag + "<br />Note : " + note;
+
+    function formValidation() {
+
+        console.log("formValidation is initiated");
+
+        if (!(nameField.value)) {
+            showAlert("edit_note_alert", "alert-danger", null, "Form Validation Failed", null, "Name can not be null");
+            return false;
+        }
+        // console.log("name : " + nameField.value);
+        if (!(categoryField.value)) {
+            showAlert("edit_note_alert", "alert-danger", null, "Form Validation Failed", null, "category can not be null");
+            return false;
+        }
+        // console.log("categoryField : " + categoryField.value);
+        if (!(tagField.value)) {
+            showAlert("edit_note_alert", "alert-danger", null, "Form Validation Failed", null, "Tag can not be null");
+            return false;
+        }
+        // console.log("tagField : " + tagField.value);
+        if (!(noteField.value)) {
+            showAlert("edit_note_alert", "alert-danger", null, "Form Validation Failed", null, "Note can not be null");
+            return false;
+        }
+        // console.log("noteField : " + fileField.value);
+        return userDetails;
+
+    }
+
+    function clearFields() {
+        console.log("clearFields is initiated");
+        document.getElementById('find_note_key').value = "";
+        document.getElementById('edit_type_selector').options.selectedIndex = 0;
+    }
+
+    var Validation = formValidation();
+
+    console.log("userDeatils created")
+
+    if (Validation) {
+        console.log("validation successfull");
+        // var js = document.createElement("script");
+        // js.type = "text/javascript";
+        // js.src = "/js/firebaseSaveData.js";
+        // document.body.appendChild(js);
+        var success = firebaseUpdateData(key);
+        if (success) {
+            showAlert("edit_note_alert", "alert-success", null, "Note Updated!", null, userDetails);
+            clearFields();
+        }
+        else
+            showAlert("edit_note_alert", "alert-danger", null, "Note updation Failed!", null, "Firebase error!");
+    }
+
+}
+
 function showAlert(parent, alertClassName, headingClassName = "alert-heading", alertHeading, textClassName = "mb-0", alertText) {
 
     alertClassName += " alert  alert-dismissible fade show";
@@ -266,165 +445,116 @@ var openFile = function (event) {
 function filterData() {
     var filteredData = [];
     var preciselyFilteredData = [];
+    var filteredKey = [];
+    var preciselyFilteredKey = [];
     var startDateObejct = new Date(startDate);
     var endDateObject = new Date(endDate);
     var currentDateObject;
+
+    function addToNotesPriorityList() {
+        if (name && noteData[i].name.toUpperCase() === name.toUpperCase()) {
+            preciselyFilteredData.push(noteData[i]);
+            preciselyFilteredKey.push(noteKey[i]);
+        } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
+            preciselyFilteredData.push(noteData[i])
+            preciselyFilteredKey.push(noteKey[i])
+        } else if (category && noteData[i].category.toUpperCase() === category.toUpperCase()) {
+            preciselyFilteredData.push(noteData[i])
+            preciselyFilteredKey.push(noteKey[i])
+        } else if (tag && noteData[i].tag.toUpperCase() === tag.toUpperCase()) {
+            preciselyFilteredData.push(noteData[i])
+            preciselyFilteredKey.push(noteKey[i])
+        }
+
+        else if (name && noteData[i].name.toUpperCase().includes(name.toUpperCase())) {
+            filteredData.push(noteData[i]);
+            filteredKey.push(noteKey[i]);
+        } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
+            filteredData.push(noteData[i])
+            filteredKey.push(noteKey[i])
+        } else if (category && noteData[i].category.toUpperCase().includes(category.toUpperCase())) {
+            filteredData.push(noteData[i])
+            filteredKey.push(noteKey[i])
+        } else if (tag && noteData[i].tag.toUpperCase().includes(tag.toUpperCase())) {
+            filteredData.push(noteData[i])
+            filteredKey.push(noteKey[i])
+        } else {
+            if (!(name || keyword || category || tag)) {
+                filteredData.push(noteData[i])
+                filteredKey.push(noteKey[i])
+            }
+        }
+    }
+
     for (i = 0; i < noteData.length; i++) {
         currentDateObject = new Date(noteData[i].date);
         if (endDate && startDate) {
             if (currentDateObject.getTime() >= startDateObejct.getTime() && currentDateObject.getTime() <= endDateObject.getTime()) {
-                if (name && noteData[i].name.toUpperCase() === name.toUpperCase()) {
-                    preciselyFilteredData.push(noteData[i]);
-                } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
-                    preciselyFilteredData.push(noteData[i])
-                } else if (category && noteData[i].category.toUpperCase() === category.toUpperCase()) {
-                    preciselyFilteredData.push(noteData[i])
-                } else if (tag && noteData[i].tag.toUpperCase() === tag.toUpperCase()) {
-                    preciselyFilteredData.push(noteData[i])
-                }
-
-                else if (name && noteData[i].name.toUpperCase().includes(name.toUpperCase())) {
-                    filteredData.push(noteData[i]);
-                } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
-                    filteredData.push(noteData[i])
-                } else if (category && noteData[i].category.toUpperCase().includes(category.toUpperCase())) {
-                    filteredData.push(noteData[i])
-                } else if (tag && noteData[i].tag.toUpperCase().includes(tag.toUpperCase())) {
-                    filteredData.push(noteData[i])
-                } else {
-                    if (!(name || keyword || category || tag)) {
-                        filteredData.push(noteData[i])
-                    }
-                }
+                addToNotesPriorityList();
             }
         } else if (startDate) {
             if (currentDateObject.getTime() >= startDateObejct.getTime()) {
-                if (name && noteData[i].name.toUpperCase() == name.toUpperCase()) {
-                    preciselyFilteredData.push(noteData[i]);
-                } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
-                    preciselyFilteredData.push(noteData[i])
-                } else if (category && noteData[i].category.toUpperCase() == category.toUpperCase()) {
-                    preciselyFilteredData.push(noteData[i])
-                } else if (tag && noteData[i].tag.toUpperCase() == tag.toUpperCase()) {
-                    preciselyFilteredData.push(noteData[i])
-                }
-
-                else if (name && noteData[i].name.toUpperCase().includes(name.toUpperCase())) {
-                    filteredData.push(noteData[i]);
-                } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
-                    filteredData.push(noteData[i])
-                } else if (category && noteData[i].category.toUpperCase().includes(category.toUpperCase())) {
-                    filteredData.push(noteData[i])
-                } else if (tag && noteData[i].tag.toUpperCase().includes(tag.toUpperCase())) {
-                    filteredData.push(noteData[i])
-                } else {
-                    if (!(name || keyword || category || tag)) {
-                        filteredData.push(noteData[i])
-                    }
-                }
+                addToNotesPriorityList();
             }
         } else if (endDate) {
             if (currentDateObject.getTime() <= endDateObject.getTime()) {
-                if (name && noteData[i].name.toUpperCase() == name.toUpperCase()) {
-                    preciselyFilteredData.push(noteData[i]);
-                } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
-                    preciselyFilteredData.push(noteData[i])
-                } else if (category && noteData[i].category.toUpperCase() == category.toUpperCase()) {
-                    preciselyFilteredData.push(noteData[i])
-                } else if (tag && noteData[i].tag.toUpperCase() == tag.toUpperCase()) {
-                    preciselyFilteredData.push(noteData[i])
-                }
-
-                else if (name && noteData[i].name.toUpperCase().includes(name.toUpperCase())) {
-                    filteredData.push(noteData[i]);
-                } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
-                    filteredData.push(noteData[i])
-                } else if (category && noteData[i].category.toUpperCase().includes(category.toUpperCase())) {
-                    filteredData.push(noteData[i])
-                } else if (tag && noteData[i].tag.toUpperCase().includes(tag.toUpperCase())) {
-                    filteredData.push(noteData[i])
-                } else {
-                    if (!(name || keyword || category || tag)) {
-                        filteredData.push(noteData[i])
-                    }
-                }
+                addToNotesPriorityList();
             }
         } else {
-            if (name && noteData[i].name.toUpperCase() == name.toUpperCase()) {
-                preciselyFilteredData.push(noteData[i]);
-            } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
-                preciselyFilteredData.push(noteData[i])
-            } else if (category && noteData[i].category.toUpperCase() == category.toUpperCase()) {
-                preciselyFilteredData.push(noteData[i])
-            } else if (tag && noteData[i].tag.toUpperCase() == tag.toUpperCase()) {
-                preciselyFilteredData.push(noteData[i])
-            }
-
-            else if (name && noteData[i].name.toUpperCase().includes(name.toUpperCase())) {
-                filteredData.push(noteData[i]);
-            } else if (keyword && noteData[i].note.toUpperCase().includes(keyword.toUpperCase())) {
-                filteredData.push(noteData[i])
-            } else if (category && noteData[i].category.toUpperCase().includes(category.toUpperCase())) {
-                filteredData.push(noteData[i])
-            } else if (tag && noteData[i].tag.toUpperCase().includes(tag.toUpperCase())) {
-                filteredData.push(noteData[i])
-            } else {
-                if (!(name || keyword || category || tag)) {
-                    filteredData.push(noteData[i])
-                }
-            }
-
+            addToNotesPriorityList();
         }
     }
     var notes = preciselyFilteredData.concat(filteredData);
+    var keys = preciselyFilteredKey.concat(filteredKey);
     showAlert("search_note_alert", "alert-success", null, "Showing " + notes.length + " Results (double tap to close)", null, userDetails);
-    show_notes(notes);
+    show_notes(notes, keys);
 }
 
-function show_notes(notes) {
+
+function show_notes(notes, keys) {
     removeChilds("notes_diplay");
     for (var i = 0; i < notes.length; i++)
-        addToNoteDisplay(notes[i], i);
+        addToNoteDisplay(notes[i], keys[i], i);
 }
 
-function addToNoteDisplay(note, count) {
+function addToNoteDisplay(note, key, count) {
     var container = document.getElementById("notes_diplay");
     var card = document.createElement("div");
-    card.setAttribute("class", "card")
+    card.setAttribute("class", "card");
     container.appendChild(card);
 
     //Add head
+    var outerDiv = document.createElement("div");
+    outerDiv.setAttribute("class", "col-xs-12-nw")
+    card.appendChild(outerDiv);
+
     var innerDiv = document.createElement("div");
-    innerDiv.setAttribute("class", "card-header");
-    // if (count == 0)
-    // innerDiv.setAttribute("class", "card-header btn btn-link");
-    // else
-    //     innerDiv.setAttribute("class", "card-header btn btn-link collapsed");
+    innerDiv.setAttribute("class", "card-header col-xs-10-nw pointer");
     innerDiv.setAttribute("id", "heading" + count);
     innerDiv.setAttribute("data-toggle", "collapse");
     innerDiv.setAttribute("data-target", "#collapse" + count);
     innerDiv.setAttribute("aria-expanded", "true");
     innerDiv.setAttribute("aria-controls", "collapse" + count);
-    card.appendChild(innerDiv);
+    outerDiv.appendChild(innerDiv);
 
-    var h2Ele = document.createElement("h2");
-    h2Ele.setAttribute("class", "mb-0 panel-title");
+    var h2Ele = document.createElement("h3");
+    h2Ele.setAttribute("class", "mb-0 panel-title text-primary");
+    h2Ele.innerHTML = note.name;
     innerDiv.appendChild(h2Ele)
 
-    // var buttonArrow = document.createElement("button");
-    // buttonArrow.setAttribute("class", "btn btn-link");
-    // buttonArrow.setAttribute("type", "button");
-    // buttonArrow.innerHTML = '</h3><i class="fas fa-arrow-circle-down arrow-toggle"></i>';
-    // h2Ele.appendChild(buttonArrow);
+    var editDiv = document.createElement("div");
+    editDiv.setAttribute("id", "edit");
+    editDiv.setAttribute("class", "card-header col-xs-2-nw pointer");
+    editDiv.setAttribute("onClick", 'editClickListener("' + key + '");')
+    // editDiv.innerHTML = '<a href="#pills-edit" style="display:none;"></a>';
 
 
-    // var button = document.createElement("button");
-    var button = document.createElement("p");
-    // button.setAttribute("class", "btn btn-link");
-    button.setAttribute("class", "text-primary");
-    // button.setAttribute("type", "button");
-    button.innerHTML = '<h3>' + note.name + '</h3>';
-    h2Ele.appendChild(button);
+    outerDiv.appendChild(editDiv);
+
+    var h2Ele2 = document.createElement("h3");
+    h2Ele2.setAttribute("class", "mb-0 panel-title text-primary");
+    h2Ele2.innerHTML = '<i class="fas fa-edit"></i>';
+    editDiv.appendChild(h2Ele2);
 
     //Add body
     innerDiv = document.createElement("div");
@@ -437,13 +567,12 @@ function addToNoteDisplay(note, count) {
     innerDiv.setAttribute("data-parent", "#notes_diplay");
     card.appendChild(innerDiv);
 
-    var innerDiv2 = document.createElement("div");
-    innerDiv2.setAttribute("class", "card-body");
-
     note.note = note.note.split("\t").join("&nbsp;&nbsp;&nbsp;&nbsp;");
     note.note = note.note.split(" ").join("&nbsp;");
     note.note = note.note.split("\n").join("<br />");
 
+    var innerDiv2 = document.createElement("div");
+    innerDiv2.setAttribute("class", "card-body");
     innerDiv2.innerHTML = "<h6>Name : " + note.name + "</h6>" + "<br />category : " + note.category + "<br />Tags :" + note.tag + "<br />Date :" + note.date + "<br />Note : " + note.note;
     innerDiv.appendChild(innerDiv2);
 
@@ -534,21 +663,87 @@ function firebaseSaveData() {
     }());
 }
 
-// var type = document.getElementById("activitySelector");
+function firebaseUpdateData(key) {
+    console.log("firebaseUpdateData.js called");
+    var success = false;
+    // Save data to firebase
+    (function () {
+        console.log("pushing to firebase");
+        console.log("type : ", type, ", name : ", name, ", category : ", category, ", tags : ", tag, ", note : ", note, ", and key : ", key);
+        switch (type) {
+            case "note":
+                noteRef.child(key).update({ name: name, category: category, tag: tag, note: note });
+                success = true;
+                break;
+            case "link":
+                linkRef.child(key).update({ name: name, category: category, tag: tag, note: note });
+                success = true;
+                break;
+            case "tip":
+                tipRef.child(key).update({ name: name, category: category, tag: tag, note: note });
+                success = true;
+                break;
+            case "todo":
+                todoRef.child(key).update({ name: name, category: category, tag: tag, note: note });
+                success = true;
+                break;
+            default:
+                success = false;
+                alert("No type found");
+        }
+        console.log("pushed to firebase");
+    }());
+    return success;
+}
 
-// type.addEventListener("click", function() {
-//     var options = type.querySelectorAll("option");
-//     var count = options.length;
+function firebaseRemoveData(key) {
+    console.log("firebaseRemoveData.js called");
+    var success = false;
+    // Save data to firebase
+    (function () {
+        console.log("removing from firebase");
+        console.log("type : ", type, ", name : ", name, ", category : ", category, ", tags : ", tag, ", note : ", note, ", and key : ", key);
+        switch (type) {
+            case "note":
+                ref = firebase.database().ref('notes/' + key);
+                ref.remove();
+                success = true;
+                break;
+            case "link":
+                ref = firebase.database().ref('links/' + key);
+                ref.remove();
+                success = true;
+                break;
+            case "tip":
+                ref = firebase.database().ref('tips/' + key);
+                ref.remove(); success = true;
+                break;
+            case "todo":
+                ref = firebase.database().ref('todos/' + key);
+                ref.remove(); success = true;
+                break;
+            default:
+                success = false;
+                alert("No type found");
+        }
+        console.log("pushed to firebase");
+    }());
+    return success;
+}
 
-// });
 
-// type.addEventListener("change", function() {
-//     if(type.value == "note")
-//     {
-//         addActivityItem();
-//     } else if(type.value == "note") {
-
-//     } else if(type.value == "link") {
-
-//     }
-// });
+function editClickListener(key) {
+    document.getElementById('find_note_key').value = key;
+    if (type == "note") {
+        document.getElementById('edit_type_selector').options.selectedIndex = 0;
+    } else if (type == "link") {
+        document.getElementById('edit_type_selector').options.selectedIndex = 1;
+    } else if (type == "tip") {
+        document.getElementById('edit_type_selector').options.selectedIndex = 2;
+    } else if (type == "todo") {
+        document.getElementById('edit_type_selector').options.selectedIndex = 3
+    } else {
+        alert("Can't find type");
+    }
+    $('a[href="#pills-edit"]').tab('show');
+}

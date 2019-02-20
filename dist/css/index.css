@@ -18,3 +18,34 @@
   margin: auto;
   display: none
 }
+
+.col-xs-12-nw {
+  white-space: nowrap !important;
+  max-width: 100%;
+  overflow: auto;
+  padding: 0px;
+ background-color: rgba(0,0,0,.03) !important;
+}
+
+.col-xs-10-nw {
+  float: left !important;
+  /* display: inline-block !important; */
+  
+}
+
+.col-xs-2-nw {
+  float: right !important;
+  /* display: inline-block !important; */
+}
+
+.col-xs-10-nw h3 {
+  display: block;
+}
+
+.col-xs-2-nw h3 {
+  display: block;
+}
+
+.pointer { 
+  cursor: pointer;
+}
