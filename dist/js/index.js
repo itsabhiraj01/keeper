@@ -11,6 +11,7 @@ window.onload = function () {
     document.getElementById("add_note_submit_button").onclick = upload_note;
     document.getElementById("find_note_submit_button").onclick = find_note;
     document.getElementById("edit_note_submit_button").onclick = edit_note;
+    document.getElementById("delete_note_submit_button").onclick = delete_note;
     document.getElementById('forgot_key').onclick = forgot_key;
     document.getElementById("add_date").valueAsDate = new Date();
     document.getElementById("search_end_date").valueAsDate = new Date();
@@ -34,8 +35,9 @@ window.onload = function () {
 }
 
 function forgot_key(event) {
-    $('a[href="' + $(this).attr('href') + '"]').tab('show');
+    $('a[href="#pills-search"]').tab('show');
 }
+
 
 function find_note() {
     var noteFound;
@@ -62,6 +64,7 @@ function find_note() {
             });
             console.log("note : ", noteFound);
             if (noteFound) {
+                hideElement('forgot_key');
                 hideElement("find_note_form");
                 setValuesInEditForm(noteFound);
                 showElement("edit_note_form");
@@ -85,7 +88,51 @@ function setValuesInEditForm(note) {
 
 function edit_note() {
     showElement("find_note_form");
+    showElement("forgot_key");
     hideElement("edit_note_form");
+    var key = document.getElementById('find_note_key').value;
+    update_note(key);
+
+}
+
+//On click listener  of Delete button
+function delete_note(key) {
+
+    showElement("find_note_form");
+    showElement("forgot_key");
+    hideElement("edit_note_form");
+    var key = document.getElementById('find_note_key').value;
+
+    var nameField = document.getElementById('edit_name');
+    var categoryField = document.getElementById('edit_category');
+    var tagField = document.getElementById('edit_tags');
+    var noteField = document.getElementById('edit_note');
+
+    name = nameField.value;
+    category = categoryField.value;
+    tag = tagField.value;
+    note = noteField.value;
+
+    function clearFields() {
+        console.log("clearFields is initiated");
+        document.getElementById('find_note_key').value = "";
+        document.getElementById('edit_type_selector').options.selectedIndex = 0;
+    }
+
+    console.log("assigned values");
+
+    userDetails = "Name : " + name + "<br />category : " + category +
+        "<br />Tag : " + tag + "<br />Note : " + note;
+
+    var success = firebaseRemoveData(key);
+
+    if (success) {
+        showAlert("edit_note_alert", "alert-success", null, "Note Removed!", null, userDetails);
+        clearFields();
+    }
+    else
+        showAlert("edit_note_alert", "alert-danger", null, "Note updation Failed!", null, "Firebase error!");
+
 }
 
 //Functon to Store data into firebase
@@ -245,6 +292,79 @@ function upload_note() {
     }
 
     clearFields();
+
+}
+
+//Function to push data to firebase
+function update_note(key) {
+
+    var nameField = document.getElementById('edit_name');
+    var categoryField = document.getElementById('edit_category');
+    var tagField = document.getElementById('edit_tags');
+    var noteField = document.getElementById('edit_note');
+
+    name = nameField.value;
+    category = categoryField.value;
+    tag = tagField.value;
+    note = noteField.value;
+
+    console.log("assigned values");
+
+    userDetails = "Name : " + name + "<br />category : " + category +
+        "<br />Tag : " + tag + "<br />Note : " + note;
+
+    function formValidation() {
+
+        console.log("formValidation is initiated");
+
+        if (!(nameField.value)) {
+            showAlert("edit_note_alert", "alert-danger", null, "Form Validation Failed", null, "Name can not be null");
+            return false;
+        }
+        // console.log("name : " + nameField.value);
+        if (!(categoryField.value)) {
+            showAlert("edit_note_alert", "alert-danger", null, "Form Validation Failed", null, "category can not be null");
+            return false;
+        }
+        // console.log("categoryField : " + categoryField.value);
+        if (!(tagField.value)) {
+            showAlert("edit_note_alert", "alert-danger", null, "Form Validation Failed", null, "Tag can not be null");
+            return false;
+        }
+        // console.log("tagField : " + tagField.value);
+        if (!(noteField.value)) {
+            showAlert("edit_note_alert", "alert-danger", null, "Form Validation Failed", null, "Note can not be null");
+            return false;
+        }
+        // console.log("noteField : " + fileField.value);
+        return userDetails;
+
+    }
+
+    function clearFields() {
+        console.log("clearFields is initiated");
+        document.getElementById('find_note_key').value = "";
+        document.getElementById('edit_type_selector').options.selectedIndex = 0;
+    }
+
+    var Validation = formValidation();
+
+    console.log("userDeatils created")
+
+    if (Validation) {
+        console.log("validation successfull");
+        // var js = document.createElement("script");
+        // js.type = "text/javascript";
+        // js.src = "/js/firebaseSaveData.js";
+        // document.body.appendChild(js);
+        var success = firebaseUpdateData(key);
+        if (success) {
+            showAlert("edit_note_alert", "alert-success", null, "Note Updated!", null, userDetails);
+            clearFields();
+        }
+        else
+            showAlert("edit_note_alert", "alert-danger", null, "Note updation Failed!", null, "Firebase error!");
+    }
 
 }
 
@@ -426,6 +546,9 @@ function addToNoteDisplay(note, key, count) {
     editDiv.setAttribute("id", "edit");
     editDiv.setAttribute("class", "card-header col-xs-2-nw pointer");
     editDiv.setAttribute("onClick", 'editClickListener("' + key + '");')
+    // editDiv.innerHTML = '<a href="#pills-edit" style="display:none;"></a>';
+
+
     outerDiv.appendChild(editDiv);
 
     var h2Ele2 = document.createElement("h3");
@@ -540,6 +663,87 @@ function firebaseSaveData() {
     }());
 }
 
+function firebaseUpdateData(key) {
+    console.log("firebaseUpdateData.js called");
+    var success = false;
+    // Save data to firebase
+    (function () {
+        console.log("pushing to firebase");
+        console.log("type : ", type, ", name : ", name, ", category : ", category, ", tags : ", tag, ", note : ", note, ", and key : ", key);
+        switch (type) {
+            case "note":
+                noteRef.child(key).update({ name: name, category: category, tag: tag, note: note });
+                success = true;
+                break;
+            case "link":
+                linkRef.child(key).update({ name: name, category: category, tag: tag, note: note });
+                success = true;
+                break;
+            case "tip":
+                tipRef.child(key).update({ name: name, category: category, tag: tag, note: note });
+                success = true;
+                break;
+            case "todo":
+                todoRef.child(key).update({ name: name, category: category, tag: tag, note: note });
+                success = true;
+                break;
+            default:
+                success = false;
+                alert("No type found");
+        }
+        console.log("pushed to firebase");
+    }());
+    return success;
+}
+
+function firebaseRemoveData(key) {
+    console.log("firebaseRemoveData.js called");
+    var success = false;
+    // Save data to firebase
+    (function () {
+        console.log("removing from firebase");
+        console.log("type : ", type, ", name : ", name, ", category : ", category, ", tags : ", tag, ", note : ", note, ", and key : ", key);
+        switch (type) {
+            case "note":
+                ref = firebase.database().ref('notes/' + key);
+                ref.remove();
+                success = true;
+                break;
+            case "link":
+                ref = firebase.database().ref('links/' + key);
+                ref.remove();
+                success = true;
+                break;
+            case "tip":
+                ref = firebase.database().ref('tips/' + key);
+                ref.remove(); success = true;
+                break;
+            case "todo":
+                ref = firebase.database().ref('todos/' + key);
+                ref.remove(); success = true;
+                break;
+            default:
+                success = false;
+                alert("No type found");
+        }
+        console.log("pushed to firebase");
+    }());
+    return success;
+}
+
+
 function editClickListener(key) {
-    alert(key);
+    document.getElementById('find_note_key').value = key;
+    if (type == "note") {
+        document.getElementById('edit_type_selector').options.selectedIndex = 0;
+    } else if (type == "link") {
+        document.getElementById('edit_type_selector').options.selectedIndex = 1;
+    } else if (type == "tip") {
+        document.getElementById('edit_type_selector').options.selectedIndex = 2;
+    } else if (type == "todo") {
+        document.getElementById('edit_type_selector').options.selectedIndex = 3
+    } else {
+        alert("Can't find type");
+    }
+    $('a[href="#pills-edit"]').tab('show');
 }

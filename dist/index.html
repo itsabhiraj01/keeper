@@ -103,7 +103,7 @@
 
             <!-- Home -->
             <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" style="margin-bottom: 200px">
+                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" style="margin-bottom: 100px">
                     <ol class="carousel-indicators">
                         <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
                         <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
@@ -208,7 +208,7 @@
                 right: 0; -->
 
 
-                <div class="accordion" id="notes_diplay" style="margin-bottom: 200px; background-color: rgba(0, 0, 0, 0.3)"></div>
+                <div class="accordion" id="notes_diplay" style="margin-bottom: 100px; background-color: rgba(0, 0, 0, 0.3)"></div>
                 <div id="spinner_container">
                     <div class="spinner-border text-primary" id="fetch_notes_spinner" role="status">
                         <span class="sr-only">Loading...</span>
@@ -220,7 +220,7 @@
             <div class="tab-pane fade" id="pills-add" role="tabpanel" aria-labelledby="pills-add-tab">
                 <div id="add_note_alert">
                 </div>
-                <form id="add_note_form" style="margin-bottom: 200px">
+                <form id="add_note_form" style="margin-bottom: 100px">
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="add_name">Name <sup style="color:red;font-size:16px">*</sup> : </label>
@@ -278,18 +278,17 @@
             </div>
 
             <!-- Edit Note -->
-            <div class="tab-pane fade" id="pills-edit" role="tabpanel" aria-labelledby="pills-edit-tab">
+            <div class="tab-pane fade" style="margin-bottom: 100px" id="pills-edit" role="tabpanel" aria-labelledby="pills-edit-tab">
                 <div id="edit_note_alert">
                 </div>
                 <!-- Find Note -->
                 <div id="find_note_alert">
-                    </div>
+                </div>
                 <form id="find_note_form">
                     <div class="form-group col-md-12 col-xs-12" style="padding:10px;">
                         <div class="form-row">
                             <div class="form-group col-md-8 col-xs-8" style="align:center">
-                                <input id="find_note_key" class="form-control" type="text" placeholder="Enter note key..."
-                                    value="-LYX2ohCvbkl3Ox-PJls">
+                                <input id="find_note_key" class="form-control" type="text" placeholder="Enter note key...">
                             </div>
                             <div class="form-group col-md-4 col-xs-4">
                                 <select class="form-control" id="edit_type_selector" form="edit_note_form">
@@ -303,11 +302,10 @@
                     </div>
                     <button id="find_note_submit_button" type="button" class="btn btn-primary btn-lg btn-block">Find</button>
                     <br />
-                    <!-- <a  id="forgot_key" data-toggle="pill" href="#pills-search-tab" role="tab" aria-controls="pills-search" aria-selected="false">Forgot Key? Click here to find key.</a> -->
-                    <a id="forgot_key" href="#pills-search">"Forgot Key? Click here to find key."</a>
+                    <a id="forgot_key" class="text-primary pointer">Forgot Key? Click here to find key.</a>
                 </form>
 
-                <form id="edit_note_form" style="margin-bottom: 200px; display: none">
+                <form id="edit_note_form" style="display: none">
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="edit_name">Name <sup style="color:red;font-size:16px">*</sup> : </label>
@@ -327,7 +325,17 @@
                         <label for="edit_note">Note <sup style="color:red;font-size:16px">*</sup> : </label>
                         <textarea class="form-control" rows="10" id="edit_note" placeholder="Either enter text or select a file below..."></textarea>
                     </div>
-                    <button id="edit_note_submit_button" type="button" class="btn btn-primary btn-lg btn-block">Edit</button>
+                    <div class="row">
+                        <div class="col-md-6 cold-lg-6 col-xs-6">
+                            <button id="edit_note_submit_button" type="button" class="btn btn-primary btn-lg btn-block">Edit</button>
+                        </div>
+                        <div class="col-xs-6 col-md-6 col-lg-6">
+                            <button id="delete_note_submit_button" type="button" class="btn btn-danger btn-lg btn-block">Delete</button>
+                        </div>
+                    </div>
+                    
+                        <!-- <div id="xyz" data-widget data-app="{{ app_key }}" data-locale="en" data-mode="onboarding"></div> -->
+                        <!-- <div id="xyz" data-widget data-app="a1yrahyjetytada1yrog" data-locale="en" data-mode="verification"></div> -->
                 </form>
             </div>
         </div>
