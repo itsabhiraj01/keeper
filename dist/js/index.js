@@ -573,7 +573,11 @@ function addToNoteDisplay(note, key, count) {
 
     var innerDiv2 = document.createElement("div");
     innerDiv2.setAttribute("class", "card-body");
-    innerDiv2.innerHTML = "<h6>Name : " + note.name + "</h6>" + "<br />category : " + note.category + "<br />Tags :" + note.tag + "<br />Date :" + note.date + "<br />Note : " + note.note;
+    console.log("type", type);
+    if (type == "link")
+        innerDiv2.innerHTML = "<h6>Name : " + note.name + "</h6>" + "<br />category : " + note.category + "<br />Tags :" + note.tag + "<br />Date :" + note.date + "<br />Link : " + '<a href="' + note.note + '">' + note.note + '</a>';
+    else
+        innerDiv2.innerHTML = "<h6>Name : " + note.name + "</h6>" + "<br />category : " + note.category + "<br />Tags :" + note.tag + "<br />Date :" + note.date + "<br />Note : " + note.note;
     innerDiv.appendChild(innerDiv2);
 
 }
