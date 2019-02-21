@@ -10,9 +10,10 @@ window.onload = function () {
     document.getElementById("search_note_submit_button").onclick = fetch_notes;
     document.getElementById("add_note_submit_button").onclick = upload_note;
     document.getElementById("find_note_submit_button").onclick = find_note;
-    document.getElementById("edit_note_submit_button").onclick = edit_note;
-    document.getElementById("delete_note_submit_button").onclick = delete_note;
     document.getElementById('forgot_key').onclick = forgot_key;
+    document.getElementById("edit_note_submit_button").onclick = edit_note;
+    document.getElementById("delete_note_submit_button").onclick = show_auth_dialog;
+    document.getElementById('submit_password').onclick = authenticate;
     document.getElementById("add_date").valueAsDate = new Date();
     document.getElementById("search_end_date").valueAsDate = new Date();
 
@@ -95,23 +96,52 @@ function edit_note() {
 
 }
 
+// Authentication function
+function authenticate() {
+    console.log("in function authenticate");
+    var password = $('#password').val();
+    //using jquery
+    var Url = 'https://us-central1-keeper-2923e.cloudfunctions.net/verifyPassword?password=' + password;
+    $.ajax({
+        url: Url,
+        type: "GET",
+        success: function (result) {
+            if (result) {
+                $('#close_modal').click();
+                delete_note();
+            }
+            else {
+                $('#password').val('');
+                showElement('incorrect_password_label');
+            }
+
+        },
+        error: function (error) {
+            console.log("Error : ", error);
+            $('#close_modal').click();
+            showAlert("edit_note_alert", "alert-danger", null, "Note updation Failed!", null, "Firebase error!");
+        }
+    })
+
+}
+
 //On click listener  of Delete button
-function delete_note(key) {
+function show_auth_dialog(key) {
+    hideElement('incorrect_password_label');
+    $('#modal').modal('toggle');
+}
+
+function delete_note() {
+    var key = document.getElementById('find_note_key').value;
 
     showElement("find_note_form");
     showElement("forgot_key");
     hideElement("edit_note_form");
-    var key = document.getElementById('find_note_key').value;
 
-    var nameField = document.getElementById('edit_name');
-    var categoryField = document.getElementById('edit_category');
-    var tagField = document.getElementById('edit_tags');
-    var noteField = document.getElementById('edit_note');
-
-    name = nameField.value;
-    category = categoryField.value;
-    tag = tagField.value;
-    note = noteField.value;
+    name = document.getElementById('edit_name').value;
+    category = document.getElementById('edit_category').value;
+    tag = document.getElementById('edit_tags').value;
+    note = document.getElementById('edit_note').value;
 
     function clearFields() {
         console.log("clearFields is initiated");
@@ -123,19 +153,17 @@ function delete_note(key) {
 
     userDetails = "Name : " + name + "<br />category : " + category +
         "<br />Tag : " + tag + "<br />Note : " + note;
-
+    
     var success = firebaseRemoveData(key);
-
-    if (success) {
-        showAlert("edit_note_alert", "alert-success", null, "Note Removed!", null, userDetails);
+    if(success) {
         clearFields();
-    }
-    else
+        showAlert("edit_note_alert", "alert-success", null, "Note Removed!", null, userDetails);
+    } else {
         showAlert("edit_note_alert", "alert-danger", null, "Note updation Failed!", null, "Firebase error!");
-
+    }
 }
 
-//Functon to Store data into firebase
+//Functon to fetch data from firebase
 function fetch_notes() {
     var nameField = document.getElementById('search_name');
     var categoryField = document.getElementById('search_category');

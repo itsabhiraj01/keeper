@@ -16,7 +16,7 @@
     <script type="text/javascript" src="https://www.gstatic.com/firebasejs/5.8.2/firebase-database.js"></script>
     <!-- <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-firestore.js"></script> -->
     <!-- <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-messaging.js"></script> -->
-    <!-- <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-functions.js"></script> -->
+    <script type="text/javascript" src="https://www.gstatic.com/firebasejs/5.8.2/firebase-functions.js"></script>
 
     <script>
         // Initialize Firebase
@@ -42,8 +42,12 @@
     <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=izvuprygwx7w3e72235i5g6qbm0x0lg7yht4fzfyomtysiy0"></script>
 
     <title>Keeper</title>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" -->
+    <!-- crossorigin="anonymous"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
         crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
@@ -51,7 +55,7 @@
 
 
     <link rel="stylesheet" href="css/index.css">
-
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
 
 </head>
 
@@ -113,7 +117,7 @@
                         <div class="carousel-item active">
                             <img src="img/blue.png" class="d-block w-100" style=" width:100%; height: 400px !important;"
                                 alt="Keeper">
-                            <div class="carousel-caption d-none d-md-block">
+                            <div class="carousel-caption  d-xs-block d-sm-block d-md-block">
                                 <h5>Keeper</h5>
                                 <p>Keeper is your home to save your all important notes.</p>
                             </div>
@@ -121,7 +125,7 @@
                         <div class="carousel-item">
                             <img src="img/green.png" class="d-block w-100" style=" width:100%; height: 400px !important;"
                                 alt="Searching Note">
-                            <div class="carousel-caption d-none d-md-block">
+                            <div class="carousel-caption  d-xs-block d-sm-block d-md-block">
                                 <h5>Searching Notes</h5>
                                 <p>Quickly search notes with filters.</p>
                             </div>
@@ -129,7 +133,7 @@
                         <div class="carousel-item">
                             <img src="img/yellow.png" class="d-block w-100" style=" width:100%; height: 400px !important;"
                                 alt="Add Notes">
-                            <div class="carousel-caption d-none d-md-block">
+                            <div class="carousel-caption  d-xs-block d-sm-block d-md-block">
                                 <h5>Adding Notes</h5>
                                 <p>Quickly add a note along with its attributes.</p>
                             </div>
@@ -330,16 +334,37 @@
                             <button id="edit_note_submit_button" type="button" class="btn btn-primary btn-lg btn-block">Edit</button>
                         </div>
                         <div class="col-xs-6 col-md-6 col-lg-6">
-                            <button id="delete_note_submit_button" type="button" class="btn btn-danger btn-lg btn-block">Delete</button>
+                            <button id="delete_note_submit_button" type="button" data-toggle="modal" class="btn btn-danger btn-lg btn-block">Delete</button>
                         </div>
                     </div>
-                    
-                        <!-- <div id="xyz" data-widget data-app="{{ app_key }}" data-locale="en" data-mode="onboarding"></div> -->
-                        <!-- <div id="xyz" data-widget data-app="a1yrahyjetytada1yrog" data-locale="en" data-mode="verification"></div> -->
+
+
                 </form>
             </div>
         </div>
 
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalDivLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalDivLabel"><i class="fas fa-key"></i>   Authentication</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="password" id="password" class="form-control" placeholder="Enter password...">
+                    <label for="password" id="incorrect_password_label" style="display: none"><span style="color:red;padding-left: 8px;padding-top: 16px;">Authentication
+                            failed!</span></label>
+                </div>
+                <div class="modal-footer">
+                    <button id="close_modal" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="submit_password" type="button" class="btn btn-primary">Verify</button>
+                </div>
+            </div>
+        </div>
     </div>
 
 </body>

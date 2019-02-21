@@ -24,11 +24,12 @@
   max-width: 100%;
   overflow: auto;
   padding: 0px;
- background-color: rgba(0,0,0,.03) !important;
+ background-color: rgba(0,0,0,.035) !important;
 }
 
 .col-xs-10-nw {
   float: left !important;
+  width: calc(100% - 71.5px) !important;
   /* display: inline-block !important; */
   
 }
@@ -49,3 +50,4 @@
 .pointer { 
   cursor: pointer;
 }
+
