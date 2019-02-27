@@ -68,7 +68,7 @@ exports.verifyPassword = functions.https.onRequest((request, response) => {
 });
 
 exports.removeData = functions.https.onRequest((request, response) => {
-    return cors(request, response, async () => {
+    return cors(request, response, async _ => {
         console.log("1 Running removeData");
         // Grab the text parameter.
         const node = request.body.data.node;
