@@ -7,8 +7,8 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
 
-const cors = require('cors')({ 
-    origin: true 
+const cors = require('cors')({
+    origin: true
 });
 // const app = express();
 
@@ -44,16 +44,16 @@ const cors = require('cors')({
 
 exports.verifyPassword = functions.https.onRequest((request, response) => {
 
-    console.log("outer req : ",request);
+    console.log("outer req : ", request);
     return cors(request, response, () => {
         // Grab the text parameter.
-        console.log("inner request : ",request);
+        console.log("inner request : ", request);
         const password = request.query.password;
         // Push the new message into the Realtime Database using the Firebase Admin SDK.
         return admin.database().ref("password").once('value').then((snapshot) => {
             // Redirect with 303 SEE OTHER to the URL of the pushed object in the Firebase console.
             var childData = snapshot.val();
-            console.log("password : ",childData,"   and user entered : ",password);
+            console.log("password : ", childData, "   and user entered : ", password);
             if (childData === password) {
                 return response.status(200).send(true);
                 // bool = true;
@@ -65,6 +65,25 @@ exports.verifyPassword = functions.https.onRequest((request, response) => {
             // return response.redirect(303, bool);
         });
     });
+});
+
+exports.removeData = functions.https.onRequest((request, response) => {
+    return cors(request, response, async () => {
+        console.log("1 Running removeData");
+        // Grab the text parameter.
+        const node = request.body.data.node;
+        const key = request.body.data.key;
+        console.log("key :",key,"and node :",node);
+        // Push the new message into the Realtime Database using the Firebase Admin SDK.
+        if (node && key) {
+            await admin.database().ref(node + "/" + key).remove();
+            console.log("2 returning result :");
+            return response.status(200).send({ 'data': { 'result': true } });
+        } else {
+            console.log("2 null node or key ");
+            return response.status(200).send({ 'data': { 'result': false } });
+        }
+    });    
 });
 
 

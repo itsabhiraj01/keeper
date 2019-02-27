@@ -98,6 +98,7 @@ function edit_note() {
 
 // Authentication function
 function authenticate() {
+    document.getElementById('submit_password').disabled = false;
     console.log("in function authenticate");
     var password = $('#password').val();
     //using jquery
@@ -107,12 +108,15 @@ function authenticate() {
         type: "GET",
         success: function (result) {
             if (result) {
+                $('#password').val('');
                 $('#close_modal').click();
                 delete_note();
             }
             else {
+                document.getElementById('submit_password').disabled = true;
                 $('#password').val('');
                 showElement('incorrect_password_label');
+                document.getElementById('submit_password').disabled = false;
             }
 
         },
@@ -153,13 +157,18 @@ function delete_note() {
 
     userDetails = "Name : " + name + "<br />category : " + category +
         "<br />Tag : " + tag + "<br />Note : " + note;
-    
-    var success = firebaseRemoveData(key);
-    if(success) {
-        clearFields();
-        showAlert("edit_note_alert", "alert-success", null, "Note Removed!", null, userDetails);
+
+    if (key && key != '' && key != null) {
+        firebaseRemoveData(key,success => {
+            if (success) {
+                clearFields();
+                showAlert("edit_note_alert", "alert-success", null, "Note Removed!", null, userDetails);
+            } else {
+                showAlert("edit_note_alert", "alert-danger", null, "Note Deletion Failed!", null, "Firebase error!");
+            }
+        });
     } else {
-        showAlert("edit_note_alert", "alert-danger", null, "Note updation Failed!", null, "Firebase error!");
+        showAlert("edit_note_alert", "alert-danger", null, "Note Deletion Failed!", null, "Key connot be null!");
     }
 }
 
@@ -728,43 +737,54 @@ function firebaseUpdateData(key) {
     return success;
 }
 
-function firebaseRemoveData(key) {
-    console.log("firebaseRemoveData.js called");
-    var success = false;
+function firebaseRemoveData(key, callback) {
     // Save data to firebase
-    (function () {
-        console.log("removing from firebase");
-        console.log("type : ", type, ", name : ", name, ", category : ", category, ", tags : ", tag, ", note : ", note, ", and key : ", key);
-        switch (type) {
-            case "note":
-                ref = firebase.database().ref('notes/' + key);
-                ref.remove();
-                success = true;
-                break;
-            case "link":
-                ref = firebase.database().ref('links/' + key);
-                ref.remove();
-                success = true;
-                break;
-            case "tip":
-                ref = firebase.database().ref('tips/' + key);
-                ref.remove(); success = true;
-                break;
-            case "todo":
-                ref = firebase.database().ref('todos/' + key);
-                ref.remove(); success = true;
-                break;
-            default:
-                success = false;
-                alert("No type found");
+    var type;
+    switch(window.type) {
+        case "note":
+            type = "notes";
+            break;
+        case "link":
+            type = "links";
+            break;
+        case "tip":
+            type = "tips";
+            break;
+        case "todo":
+            type = "todos";
+            break;
+        default:
+            type = "";
+            alert("type cannot be null");
+    }
+        if(type && key) {
+            firebase.functions().httpsCallable("removeData")(
+                {
+                    "node":type,
+                    "key":key
+                }
+            ).then(resp => {
+                console.log("data : ",resp);
+                if(resp.data.result) {
+                    console.log("isDataRemoved : ", resp.data.result);
+                    callback(true);
+                } else {
+                    console.log("isDataRemoved : ", resp.data.result);
+                    callback(false);
+                }
+            });
+        } else {
+                alert("Incorrent key or type");
+                callback(false);
         }
-        console.log("pushed to firebase");
-    }());
-    return success;
 }
 
 
 function editClickListener(key) {
+    showElement("find_note_form");
+    showElement("forgot_key");
+    hideElement("edit_note_form");
+
     document.getElementById('find_note_key').value = key;
     if (type == "note") {
         document.getElementById('edit_type_selector').options.selectedIndex = 0;
