@@ -14,6 +14,7 @@
     <!-- Add additional services that you want to use -->
     <!-- <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-auth.js"></script> -->
     <script type="text/javascript" src="https://www.gstatic.com/firebasejs/5.8.2/firebase-database.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/firebasejs/5.9.1/firebase-storage.js"></script>
     <!-- <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-firestore.js"></script> -->
     <!-- <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-messaging.js"></script> -->
     <script type="text/javascript" src="https://www.gstatic.com/firebasejs/5.8.2/firebase-functions.js"></script>
@@ -25,32 +26,35 @@
             authDomain: "keeper-2923e.firebaseapp.com",
             databaseURL: "https://keeper-2923e.firebaseio.com",
             projectId: "keeper-2923e",
-            storageBucket: "",
+            storageBucket: "keeper-2923e.appspot.com",
             messagingSenderId: "1094226696666"
         };
         firebase.initializeApp(config);
     </script>
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
-        crossorigin="anonymous">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
     <script type="text/javascript" src="/js/index.js"></script>
 
-    <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=izvuprygwx7w3e72235i5g6qbm0x0lg7yht4fzfyomtysiy0"></script>
+    <script
+        src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=izvuprygwx7w3e72235i5g6qbm0x0lg7yht4fzfyomtysiy0"></script>
 
     <title>Keeper</title>
 
 
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" -->
     <!-- crossorigin="anonymous"></script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
         crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
         crossorigin="anonymous"></script>
 
 
@@ -91,12 +95,16 @@
                     aria-controls="pills-search" aria-selected="false">Search Note</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="pills-add-tab" data-toggle="pill" href="#pills-add" role="tab" aria-controls="pills-add"
-                    aria-selected="false">Add Note</a>
+                <a class="nav-link" id="pills-add-tab" data-toggle="pill" href="#pills-add" role="tab"
+                    aria-controls="pills-add" aria-selected="false">Add Note</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="pills-edit-tab" data-toggle="pill" href="#pills-edit" role="tab" aria-controls="pills-edit"
-                    aria-selected="false">Edit Note</a>
+                <a class="nav-link" id="pills-add-tab" data-toggle="pill" href="#pills-upload" role="tab"
+                    aria-controls="pills-upload" aria-selected="false">Upload File</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-edit-tab" data-toggle="pill" href="#pills-edit" role="tab"
+                    aria-controls="pills-edit" aria-selected="false">Edit Note</a>
             </li>
         </ul>
 
@@ -107,7 +115,8 @@
 
             <!-- Home -->
             <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" style="margin-bottom: 100px">
+                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel"
+                    style="margin-bottom: 100px">
                     <ol class="carousel-indicators">
                         <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
                         <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
@@ -123,16 +132,16 @@
                             </div>
                         </div>
                         <div class="carousel-item">
-                            <img src="img/green.png" class="d-block w-100" style=" width:100%; height: 400px !important;"
-                                alt="Searching Note">
+                            <img src="img/green.png" class="d-block w-100"
+                                style=" width:100%; height: 400px !important;" alt="Searching Note">
                             <div class="carousel-caption  d-xs-block d-sm-block d-md-block">
                                 <h5>Searching Notes</h5>
                                 <p>Quickly search notes with filters.</p>
                             </div>
                         </div>
                         <div class="carousel-item">
-                            <img src="img/yellow.png" class="d-block w-100" style=" width:100%; height: 400px !important;"
-                                alt="Add Notes">
+                            <img src="img/yellow.png" class="d-block w-100"
+                                style=" width:100%; height: 400px !important;" alt="Add Notes">
                             <div class="carousel-caption  d-xs-block d-sm-block d-md-block">
                                 <h5>Adding Notes</h5>
                                 <p>Quickly add a note along with its attributes.</p>
@@ -204,7 +213,14 @@
                             </div>
                         </div>
                     </div>
-                    <button type="button" id="search_note_submit_button" class="btn btn-primary btn-lg btn-block">Search</button>
+                    <div class="form-row custom-control custom-switch" id="search_in_files_div">
+                        <input type="checkbox" class="custom-control-input" id="search_in_files">
+                        <label class="custom-control-label" for="search_in_files">Include Uploaded Files for
+                            Searching</label>
+                    </div>
+                    <br />
+                    <button type="button" id="search_note_submit_button"
+                        class="btn btn-primary btn-lg btn-block">Search</button>
                 </form>
                 <!-- top:0;
                 bottom: 0;
@@ -212,7 +228,8 @@
                 right: 0; -->
 
 
-                <div class="accordion" id="notes_diplay" style="margin-bottom: 100px; background-color: rgba(0, 0, 0, 0.3)"></div>
+                <div class="accordion" id="notes_diplay"
+                    style="margin-bottom: 100px; background-color: rgba(0, 0, 0, 0.3)"></div>
                 <div id="spinner_container">
                     <div class="spinner-border text-primary" id="fetch_notes_spinner" role="status">
                         <span class="sr-only">Loading...</span>
@@ -250,7 +267,8 @@
                     </div>
                     <div class="form-group">
                         <label for="add_note">Note <sup style="color:red;font-size:16px">*</sup> : </label>
-                        <textarea class="form-control" rows="5" id="add_note" placeholder="Either enter text or select a file below..."></textarea>
+                        <textarea class="form-control" rows="5" id="add_note"
+                            placeholder="Either enter text or select a file below..."></textarea>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
@@ -259,8 +277,8 @@
                                     <label for="add_file">Input file : </label>
                                 </div>
                                 <div class="form-group col-md-9">
-                                    <input type="file" accept='text/plain' onchange='openFile(event)' class="form-control-file"
-                                        id="add_file" multiple />
+                                    <input type="file" accept='text/plain' onchange='openFile(event)'
+                                        class="form-control-file" id="add_file" multiple />
                                     <output id="list"></output>
                                 </div>
                             </div>
@@ -277,12 +295,87 @@
                             </div>
                         </div>
                     </div>
-                    <button id="add_note_submit_button" type="button" class="btn btn-primary btn-lg btn-block">Add</button>
+                    <button id="add_note_submit_button" type="button"
+                        class="btn btn-primary btn-lg btn-block">Add</button>
+                </form>
+            </div>
+
+            <!-- Upload File -->
+            <div class="tab-pane fade" id="pills-upload" role="tabpanel" aria-labelledby="pills-upload-tab">
+                <div id="upload_file_alert">
+                </div>
+                <form id="upload_file_form" style="margin-bottom: 100px">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="file_name">Name <sup style="color:red;font-size:16px">*</sup> : </label>
+                            <input type="text" class="form-control" id="file_name" placeholder="Name">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="language">Language <sup style="color:red;font-size:16px">*</sup> : </label>
+                            <input type="text" class="form-control" id="language" placeholder="Language">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="file_type_selector">Type <sup style="color:red;font-size:16px">*</sup> :
+                            </label>
+                            <select class="form-control" id="file_type_selector" form="upload_file_form">
+                                <option value="txt" selected>Text</option>
+                                <option value="pdf">pdf</option>
+                                <option value="doc">docx</option>
+                                <option value="ppt">ppt</option>
+                                <option value="zip">zip</option>
+                                <option value="txt">code</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="author_name">Author <sup style="color:red;font-size:16px">*</sup> : </label>
+                            <input type="text" class="form-control" id="author_name" placeholder="Author">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="publication_name">Publication <sup style="color:red;font-size:16px">*</sup> :
+                            </label>
+                            <input type="text" class="form-control" id="publication_name" placeholder="Publication">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="file_tags">Tags <sup style="color:red;font-size:16px">*</sup> : </label>
+                        <input type="text" class="form-control" id="file_tags" placeholder="Tags">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <label for="upload_file">Input file <sup style="color:red;font-size:16px">*</sup> :
+                                    </label>
+                                </div>
+                                <div class="form-group col-md-9">
+                                    <input type="file" accept='text/plain' onchange='uploadFile(event)'
+                                        class="form-control-file" id="upload_file" multiple />
+                                    <output id="file"></output>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <label for="upload_date">Select Date <sup style="color:red;font-size:16px">*</sup> :
+                                    </label>
+                                </div>
+                                <div class="form-group col-md-9">
+                                    <input type="date" name="date" id="upload_date">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="upload_file_submit_button" type="button"
+                        class="btn btn-primary btn-lg btn-block">Upload</button>
                 </form>
             </div>
 
             <!-- Edit Note -->
-            <div class="tab-pane fade" style="margin-bottom: 100px" id="pills-edit" role="tabpanel" aria-labelledby="pills-edit-tab">
+            <div class="tab-pane fade" style="margin-bottom: 100px" id="pills-edit" role="tabpanel"
+                aria-labelledby="pills-edit-tab">
                 <div id="edit_note_alert">
                 </div>
                 <!-- Find Note -->
@@ -292,7 +385,8 @@
                     <div class="form-group col-md-12 col-xs-12" style="padding:10px;">
                         <div class="form-row">
                             <div class="form-group col-md-8 col-xs-8" style="align:center">
-                                <input id="find_note_key" class="form-control" type="text" placeholder="Enter note key...">
+                                <input id="find_note_key" class="form-control" type="text"
+                                    placeholder="Enter note key...">
                             </div>
                             <div class="form-group col-md-4 col-xs-4">
                                 <select class="form-control" id="edit_type_selector" form="edit_note_form">
@@ -304,7 +398,8 @@
                             </div>
                         </div>
                     </div>
-                    <button id="find_note_submit_button" type="button" class="btn btn-primary btn-lg btn-block">Find</button>
+                    <button id="find_note_submit_button" type="button"
+                        class="btn btn-primary btn-lg btn-block">Find</button>
                     <br />
                     <a id="forgot_key" class="text-primary pointer">Forgot Key? Click here to find key.</a>
                 </form>
@@ -327,14 +422,17 @@
                     </div>
                     <div class="form-group">
                         <label for="edit_note">Note <sup style="color:red;font-size:16px">*</sup> : </label>
-                        <textarea class="form-control" rows="10" id="edit_note" placeholder="Either enter text or select a file below..."></textarea>
+                        <textarea class="form-control" rows="10" id="edit_note"
+                            placeholder="Either enter text or select a file below..."></textarea>
                     </div>
                     <div class="row">
                         <div class="col-md-6 cold-lg-6 col-xs-6">
-                            <button id="edit_note_submit_button" type="button" class="btn btn-primary btn-lg btn-block">Edit</button>
+                            <button id="edit_note_submit_button" type="button"
+                                class="btn btn-primary btn-lg btn-block">Edit</button>
                         </div>
                         <div class="col-xs-6 col-md-6 col-lg-6">
-                            <button id="delete_note_submit_button" type="button" data-toggle="modal" class="btn btn-danger btn-lg btn-block">Delete</button>
+                            <button id="delete_note_submit_button" type="button" data-toggle="modal"
+                                class="btn btn-danger btn-lg btn-block">Delete</button>
                         </div>
                     </div>
 
@@ -349,14 +447,15 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalDivLabel"><i class="fas fa-key"></i>   Authentication</h5>
+                    <h5 class="modal-title" id="modalDivLabel"><i class="fas fa-key"></i> Authentication</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <input type="password" id="password" class="form-control" placeholder="Enter password...">
-                    <label for="password" id="incorrect_password_label" style="display: none"><span style="color:red;padding-left: 8px;padding-top: 16px;">Authentication
+                    <label for="password" id="incorrect_password_label" style="display: none"><span
+                            style="color:red;padding-left: 8px;padding-top: 16px;">Authentication
                             failed!</span></label>
                 </div>
                 <div class="modal-footer">

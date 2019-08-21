@@ -1,20 +1,24 @@
 console.log("index.js called");
 var name, category, type, tag, note, date;
+var language, author, publication;
 var keyword, startDate, endDate;
 var noteData, noteKey;
 var userDeatils;
+var includeFilesSwitch = false;
 // var firebase;
-var noteRef, linkRef, tipRef, todoRef, allRef;
-
+var noteRef, linkRef, tipRef, todoRef, allRef, fileRef;
+var storageRef;
 window.onload = function () {
     document.getElementById("search_note_submit_button").onclick = fetch_notes;
     document.getElementById("add_note_submit_button").onclick = upload_note;
+    document.getElementById("upload_file_submit_button").onclick = upload_file;
     document.getElementById("find_note_submit_button").onclick = find_note;
     document.getElementById('forgot_key').onclick = forgot_key;
     document.getElementById("edit_note_submit_button").onclick = edit_note;
     document.getElementById("delete_note_submit_button").onclick = show_auth_dialog;
     document.getElementById('submit_password').onclick = authenticate;
     document.getElementById("add_date").valueAsDate = new Date();
+    document.getElementById("upload_date").valueAsDate = new Date();
     document.getElementById("search_end_date").valueAsDate = new Date();
 
 
@@ -23,7 +27,33 @@ window.onload = function () {
     linkRef = firebase.database().ref('links');
     tipRef = firebase.database().ref('tips');
     todoRef = firebase.database().ref('todos');
+    fileRef = firebase.database().ref('files');
     allRef = firebase.database().ref('keeper-2923e');
+
+    //Attach event listeners to elements
+    document.getElementById("search_type_selector").addEventListener("click", function () {
+        if (document.getElementById("search_type_selector").value == "note") {
+            document.getElementById("search_in_files_div").setAttribute("style", "display: visible");
+        } else {
+            document.getElementById("search_in_files_div").setAttribute("style", "display: none");
+        }
+    });
+    $("#search_in_files").on('change', function () {
+        if ($(this).is(':checked')) {
+            includeFilesSwitch = $(this).is(':checked');
+        }
+        else {
+            includeFilesSwitch = $(this).is(':checked');
+        }
+    });
+
+    //firestore ref
+    // Create a root reference
+    storageRef = firebase.storage().ref();
+    // Create a reference to 'mountains.jpg'
+    // var mountainsRef = storageRef.child('mountains.jpg');
+    // Create a reference to 'images/mountains.jpg'
+    // var mountainImagesRef = storageRef.child('images/mountains.jpg');
 
     // tinymce.init({
     //     selector: '#add_note',
@@ -38,7 +68,6 @@ window.onload = function () {
 function forgot_key(event) {
     $('a[href="#pills-search"]').tab('show');
 }
-
 
 function find_note() {
     var noteFound;
@@ -159,7 +188,7 @@ function delete_note() {
         "<br />Tag : " + tag + "<br />Note : " + note;
 
     if (key && key != '' && key != null) {
-        firebaseRemoveData(key,success => {
+        firebaseRemoveData(key, success => {
             if (success) {
                 clearFields();
                 showAlert("edit_note_alert", "alert-success", null, "Note Removed!", null, userDetails);
@@ -174,6 +203,7 @@ function delete_note() {
 
 //Functon to fetch data from firebase
 function fetch_notes() {
+
     var nameField = document.getElementById('search_name');
     var categoryField = document.getElementById('search_category');
     var tagField = document.getElementById('search_tags');
@@ -332,6 +362,104 @@ function upload_note() {
 
 }
 
+//Function to push File to firebase
+function upload_file() {
+
+    console.log("in upload file func");
+    var nameField = document.getElementById('file_name');
+    var typeField = document.getElementById('file_type_selector');
+    var languageField = document.getElementById('language');
+    var authorField = document.getElementById('author_name');
+    var publicationField = document.getElementById('publication_name');
+    var tagField = document.getElementById('file_tags');
+    var fileField = document.getElementById('upload_file');
+    var dateField = document.getElementById('upload_date');
+
+    name = nameField.value;
+    type = typeField.options[typeField.selectedIndex].value;
+    language = languageField.value;
+    author = authorField.value;
+    publication = publicationField.value;
+    tag = tagField.value;
+    file = document.querySelector('#upload_file').files[0];
+    date = dateField.value;
+
+    console.log("assigned values");
+
+    userDetails = "Name : " + name + "<br />Language : " + language + "<br />Type : " + type +
+        "<br />Author :" + author + "<br />Publication :" + publication +
+        "<br />Tag : " + tag + "<br />Date : " + date;
+
+    function formValidation() {
+
+        console.log("formValidation is initiated");
+
+        if (!(nameField.value)) {
+            showAlert("upload_file_alert", "alert-danger", null, "Form Validation Failed", null, "Name can not be null");
+            return false;
+        }
+        // console.log("name : " + nameField.value);
+        if (!(languageField.value)) {
+            showAlert("upload_file_alert", "alert-danger", null, "Form Validation Failed", null, "Language can not be null");
+            return false;
+        }
+        // console.log("categoryField : " + categoryField.value);
+        if (!(typeField.value)) {
+            showAlert("upload_file_alert", "alert-danger", null, "Form Validation Failed", null, "type can not be null");
+            return false;
+        }
+        // console.log("TypeField : " + typeField.value);
+        if (!(authorField.value)) {
+            showAlert("upload_file_alert", "alert-danger", null, "Form Validation Failed", null, "Author can not be null");
+            return false;
+        }
+        if (!(publicationField.value)) {
+            showAlert("upload_file_alert", "alert-danger", null, "Form Validation Failed", null, "Publication can not be null");
+            return false;
+        }
+        if (!(tagField.value)) {
+            showAlert("upload_file_alert", "alert-danger", null, "Form Validation Failed", null, "Tag can not be null");
+            return false;
+        }
+        // console.log("tagField : " + tagField.value);
+        if (!(fileField.value)) {
+            showAlert("upload_file_alert", "alert-danger", null, "Form Validation Failed", null, "Please upload a document / File");
+            return false;
+        }
+        // console.log("noteField : " + fileField.value);
+        if (!(dateField.value)) {
+            showAlert("upload_file_alert", "alert-danger", null, "Form Validation Failed", null, "Date can not be null");
+            return false;
+        }
+        // console.log("dateField : " + dateField.value);
+        return userDetails;
+
+    }
+
+    function clearFields() {
+        console.log("clearFields is initiated");
+        nameField.value = "";
+        languageField.value = "";
+        typeField.selectedIndex = 0;
+        authorField.value = "";
+        publicationField.value = "";
+        tagField.value = "";
+        fileField.value = "";
+        dateField.valueAsDate = new Date();
+    }
+
+    var Validation = formValidation();
+
+    console.log("userDeatils created")
+
+    if (Validation) {
+        firebaseUploadFile();
+    }
+
+    clearFields();
+
+}
+
 //Function to push data to firebase
 function update_note(key) {
 
@@ -478,6 +606,16 @@ var openFile = function (event) {
     reader.readAsText(input.files[0]);
 }
 
+var uploadFile = function (event) {
+    var input = event.target;
+    var reader = new FileReader();
+    reader.onload = function () {
+        var text = reader.result;
+        file = text;
+        console.log(reader.result.substring(0, 200));
+    };
+    reader.readAsText(input.files[0]);
+}
 
 function filterData() {
     var filteredData = [];
@@ -624,7 +762,7 @@ function showElement(id) {
 }
 
 function hideElement(id) {
-    document.getElementById(id).setAttribute("style", "display: none")
+    document.getElementById(id).setAttribute("style", "display: none");
 }
 
 function removeChilds(id) {
@@ -704,43 +842,60 @@ function firebaseSaveData() {
     }());
 }
 
-function firebaseUpdateData(key) {
+function firebaseUpdateData() {
     console.log("firebaseUpdateData.js called");
-    var success = false;
+
     // Save data to firebase
     (function () {
-        console.log("pushing to firebase");
-        console.log("type : ", type, ", name : ", name, ", category : ", category, ", tags : ", tag, ", note : ", note, ", and key : ", key);
+        console.log("pushing to firebase")
         switch (type) {
             case "note":
-                noteRef.child(key).update({ name: name, category: category, tag: tag, note: note });
-                success = true;
+                noteRef.push({ name: name, category: category, tag: tag, note: note, date: date });
                 break;
             case "link":
-                linkRef.child(key).update({ name: name, category: category, tag: tag, note: note });
-                success = true;
+                linkRef.push({ name: name, category: category, tag: tag, note: note, date: date });
                 break;
             case "tip":
-                tipRef.child(key).update({ name: name, category: category, tag: tag, note: note });
-                success = true;
+                tipRef.push({ name: name, category: category, tag: tag, note: note, date: date });
                 break;
             case "todo":
-                todoRef.child(key).update({ name: name, category: category, tag: tag, note: note });
-                success = true;
+                todoRef.push({ name: name, category: category, tag: tag, note: note, date: date });
                 break;
             default:
-                success = false;
                 alert("No type found");
         }
         console.log("pushed to firebase");
     }());
-    return success;
+}
+
+function firebaseUploadFile() {
+    console.log("firebaseUploadFile.js called");
+    var key = fileRef.push().key;
+
+    //Upload file to firebase storage
+    const metadata = {
+        contentType: file.type
+    };
+    const task = storageRef.child(type).child(key + "." + type).put(file, metadata);
+    task
+        .then(snapshot => snapshot.ref.getDownloadURL())
+        .then((url) => {
+            console.log(url);
+            // Save data to firebase
+            fileRef.child(key).set({ name: name, language: language, author: author, publication: publication, type: type, tag: tag, file: file, date: date });
+            showAlert("upload_file_alert", "alert-success", null, "File Uploaded!", null, userDetails + "<br />Url : " + url);
+            return true;
+        })
+        .catch((error) => {
+            showAlert("upload_file_alert", "alert-danger", null, "File Upload failed!", null, "Error : " + error, userDeatils);
+            return false;
+        });
 }
 
 function firebaseRemoveData(key, callback) {
     // Save data to firebase
     var type;
-    switch(window.type) {
+    switch (window.type) {
         case "note":
             type = "notes";
             break;
@@ -757,26 +912,26 @@ function firebaseRemoveData(key, callback) {
             type = "";
             alert("type cannot be null");
     }
-        if(type && key) {
-            firebase.functions().httpsCallable("removeData")(
-                {
-                    "node":type,
-                    "key":key
-                }
-            ).then(resp => {
-                console.log("data : ",resp);
-                if(resp.data.result) {
-                    console.log("isDataRemoved : ", resp.data.result);
-                    callback(true);
-                } else {
-                    console.log("isDataRemoved : ", resp.data.result);
-                    callback(false);
-                }
-            });
-        } else {
-                alert("Incorrent key or type");
+    if (type && key) {
+        firebase.functions().httpsCallable("removeData")(
+            {
+                "node": type,
+                "key": key
+            }
+        ).then(resp => {
+            console.log("data : ", resp);
+            if (resp.data.result) {
+                console.log("isDataRemoved : ", resp.data.result);
+                callback(true);
+            } else {
+                console.log("isDataRemoved : ", resp.data.result);
                 callback(false);
-        }
+            }
+        });
+    } else {
+        alert("Incorrent key or type");
+        callback(false);
+    }
 }
 
 
