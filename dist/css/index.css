@@ -19,12 +19,24 @@
   display: none
 }
 
+#global_notes_spinner {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  top: 500px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  display: none
+}
+
 .col-xs-12-nw {
   white-space: nowrap !important;
   max-width: 100%;
   overflow: auto;
   padding: 0px;
- background-color: rgba(0,0,0,.035) !important;
+  background-color: rgba(0,0,0,.035) !important;
 }
 
 .col-xs-10-nw {

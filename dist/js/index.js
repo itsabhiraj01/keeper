@@ -1,12 +1,12 @@
 console.log("index.js called");
-var name, category, type, tag, note, date;
+var name, category, type, tag, note, date, file;
 var language, author, publication;
 var keyword, startDate, endDate;
 var noteData, noteKey;
 var userDeatils;
 var includeFilesSwitch = false;
 // var firebase;
-var noteRef, linkRef, tipRef, todoRef, allRef, fileRef;
+var firebaseDB, noteRef, linkRef, tipRef, todoRef, allRef, fileRef;
 var storageRef;
 window.onload = function () {
     document.getElementById("search_note_submit_button").onclick = fetch_notes;
@@ -22,13 +22,15 @@ window.onload = function () {
     document.getElementById("search_end_date").valueAsDate = new Date();
 
 
-    // firebase = firebase.database();    
-    noteRef = firebase.database().ref('notes');
-    linkRef = firebase.database().ref('links');
-    tipRef = firebase.database().ref('tips');
-    todoRef = firebase.database().ref('todos');
-    fileRef = firebase.database().ref('files');
-    allRef = firebase.database().ref('keeper-2923e');
+    firebaseDB = firebase.database();
+    noteRef = firebaseDB.ref('notes');
+    linkRef = firebaseDB.ref('links');
+    tipRef = firebaseDB.ref('tips');
+    todoRef = firebaseDB.ref('todos');
+    fileRef = firebaseDB.ref('files');
+    allRef = firebaseDB.ref('keeper-2923e');
+    // storage ref
+    storageRef = firebase.storage().ref();
 
     //Attach event listeners to elements
     document.getElementById("search_type_selector").addEventListener("click", function () {
@@ -47,21 +49,7 @@ window.onload = function () {
         }
     });
 
-    //firestore ref
-    // Create a root reference
-    storageRef = firebase.storage().ref();
-    // Create a reference to 'mountains.jpg'
-    // var mountainsRef = storageRef.child('mountains.jpg');
-    // Create a reference to 'images/mountains.jpg'
-    // var mountainImagesRef = storageRef.child('images/mountains.jpg');
-
-    // tinymce.init({
-    //     selector: '#add_note',
-    //     // plugins: 'a11ychecker advcode formatpainter linkchecker media mediaembed pageembed permanentpen powerpaste tinycomments tinydrive tinymcespellchecker',
-    //     // toolbar: 'a11ycheck code formatpainter insertfile pageembed permanentpen tinycomments',
-    //     // tinycomments_mode: 'embedded',
-    //     // tinycomments_author: 'Abhiraj'
-    //  });
+    enableEnter("search_global", "search_global_submit_button");
 
 }
 
@@ -84,7 +72,7 @@ function find_note() {
         } else {
             path = 'notes/'
         }
-        var ref = firebase.database().ref(path);
+        var ref = firebaseDB.ref(path);
         ref.once('value', function (snapshot) {
             snapshot.forEach(function (childSnapshot) {
                 if (childSnapshot.key === document.getElementById('find_note_key').value) {
@@ -882,7 +870,7 @@ function firebaseUploadFile() {
         .then((url) => {
             console.log(url);
             // Save data to firebase
-            fileRef.child(key).set({ name: name, language: language, author: author, publication: publication, type: type, tag: tag, file: file, date: date });
+            fileRef.child(key).set({ name: name, language: language, author: author, publication: publication, type: type, tag: tag, date: date, url: url });
             showAlert("upload_file_alert", "alert-success", null, "File Uploaded!", null, userDetails + "<br />Url : " + url);
             return true;
         })
@@ -953,4 +941,13 @@ function editClickListener(key) {
         alert("Can't find type");
     }
     $('a[href="#pills-edit"]').tab('show');
+}
+
+function enableEnter(fieldId, actionId) {
+    $("#" + fieldId).keyup(function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            $('#' + actionId).click();
+        }
+    });
 }
