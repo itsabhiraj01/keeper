@@ -616,7 +616,7 @@ function filterData() {
     var endDateObject = new Date(endDate);
     var currentDateObject;
 
-    function addToNotesPriorityList() {
+    function addToNotesPriorityList(i) {
         if (name && noteData[i].name.toUpperCase() === name.toUpperCase()) {
             preciselyFilteredData.push(noteData[i]);
             preciselyFilteredKey.push(noteKey[i]);
@@ -652,21 +652,27 @@ function filterData() {
     }
 
     for (i = 0; i < noteData.length; i++) {
-        currentDateObject = new Date(noteData[i].date);
+        if (noteData[i].date) {
+            currentDateObject = new Date(noteData[i].date);
+        } else {
+            console.log("Incorrect Date in Note, Name : ", noteData[i].name," Key : ", noteKey[i]);
+            continue;
+        }
         if (endDate && startDate) {
             if (currentDateObject.getTime() >= startDateObejct.getTime() && currentDateObject.getTime() <= endDateObject.getTime()) {
-                addToNotesPriorityList();
+                addToNotesPriorityList(i);
             }
         } else if (startDate) {
             if (currentDateObject.getTime() >= startDateObejct.getTime()) {
-                addToNotesPriorityList();
+                addToNotesPriorityList(i);
             }
         } else if (endDate) {
             if (currentDateObject.getTime() <= endDateObject.getTime()) {
-                addToNotesPriorityList();
+                addToNotesPriorityList(i);
             }
         } else {
-            addToNotesPriorityList();
+            console.log();
+            // addToNotesPriorityList();
         }
     }
     var notes = preciselyFilteredData.concat(filteredData);
