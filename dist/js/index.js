@@ -510,13 +510,15 @@ function update_note(key) {
         // js.type = "text/javascript";
         // js.src = "/js/firebaseSaveData.js";
         // document.body.appendChild(js);
-        var success = firebaseUpdateData(key);
-        if (success) {
-            showAlert("edit_note_alert", "alert-success", null, "Note Updated!", null, userDetails);
-            clearFields();
-        }
-        else
-            showAlert("edit_note_alert", "alert-danger", null, "Note updation Failed!", null, "Firebase error!");
+        firebaseUpdateData(key, userDetails);
+        clearFields();
+        // var success = firebaseUpdateData(key);
+        // if (success) {
+        //     showAlert("edit_note_alert", "alert-success", null, "Note Updated!", null, userDetails);
+        //     clearFields();
+        // }
+        // else
+        //     showAlert("edit_note_alert", "alert-danger", null, "Note updation Failed!", null, "Firebase error!");
     }
 
 }
@@ -830,30 +832,38 @@ function firebaseSaveData() {
     }());
 }
 
-function firebaseUpdateData() {
+function firebaseUpdateData(key, userDetails) {
     console.log("firebaseUpdateData.js called");
 
     // Save data to firebase
-    (function () {
-        console.log("pushing to firebase")
-        switch (type) {
-            case "note":
-                noteRef.push({ name: name, category: category, tag: tag, note: note, date: date });
-                break;
-            case "link":
-                linkRef.push({ name: name, category: category, tag: tag, note: note, date: date });
-                break;
-            case "tip":
-                tipRef.push({ name: name, category: category, tag: tag, note: note, date: date });
-                break;
-            case "todo":
-                todoRef.push({ name: name, category: category, tag: tag, note: note, date: date });
-                break;
-            default:
-                alert("No type found");
-        }
-        console.log("pushed to firebase");
-    }());
+    try {
+        (function () {
+            console.log("pushing to firebase");
+            switch (type) {
+                case "note":
+                    noteRef.child(key).update({ name: name, category: category, tag: tag, note: note});
+                    break;
+                case "link":
+                    linkRef.child(key).update({ name: name, category: category, tag: tag, note: note});
+                    break;
+                case "tip":
+                    tipRef.child(key).update({ name: name, category: category, tag: tag, note: note});
+                    break;
+                case "todo":
+                    todoRef.child(key).update({ name: name, category: category, tag: tag, note: note});
+                    break;
+                default:
+                    alert("No type found");
+            }
+            console.log("pushed to firebase");
+            showAlert("edit_note_alert", "alert-success", null, "Note Updated!", null, userDetails);
+            return true;
+        }());
+    } catch(err) {
+        console.log("Execption while Updating data in filebase : ",err);
+        showAlert("edit_note_alert", "alert-danger", null, "Note updation Failed!", null, "Firebase error!");
+        return false;
+    }
 }
 
 function firebaseUploadFile() {
