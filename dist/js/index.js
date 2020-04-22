@@ -102,6 +102,7 @@ function setValuesInEditForm(note) {
     document.getElementById('edit_type_selector').options;
     document.getElementById('edit_tags').value = note.tag;
     document.getElementById('edit_note').value = note.note;
+    tinymce.get('edit_note').setContent(note.note);
 }
 
 function edit_note() {
@@ -267,7 +268,8 @@ function upload_note() {
     var typeField = document.getElementById('add_type_selector');
     var tagField = document.getElementById('add_tags');
     var noteField = document.getElementById('add_note');
-    // noteField.innerHTML = tinyMCE.activeEditor.getContent({format : 'raw'});
+    var tinyMceContent =  tinyMCE.get('add_note').getContent();
+    noteField.innerHTML = tinyMceContent;
     var fileField = document.getElementById('add_file');
     var dateField = document.getElementById('add_date');
 
@@ -330,6 +332,7 @@ function upload_note() {
         noteField.value = "";
         fileField.value = "";
         dateField.valueAsDate = new Date();
+        tinyMCE.get('add_note').setContent('');
     }
 
     var Validation = formValidation();
@@ -460,6 +463,9 @@ function update_note(key) {
     category = categoryField.value;
     tag = tagField.value;
     note = noteField.value;
+    //astast
+    var tinyMceContent =  tinyMCE.get('edit_note').getContent();
+    note = tinyMceContent;
 
     console.log("assigned values");
 
@@ -506,19 +512,8 @@ function update_note(key) {
 
     if (Validation) {
         console.log("validation successfull");
-        // var js = document.createElement("script");
-        // js.type = "text/javascript";
-        // js.src = "/js/firebaseSaveData.js";
-        // document.body.appendChild(js);
         firebaseUpdateData(key, userDetails);
         clearFields();
-        // var success = firebaseUpdateData(key);
-        // if (success) {
-        //     showAlert("edit_note_alert", "alert-success", null, "Note Updated!", null, userDetails);
-        //     clearFields();
-        // }
-        // else
-        //     showAlert("edit_note_alert", "alert-danger", null, "Note updation Failed!", null, "Firebase error!");
     }
 
 }
@@ -573,11 +568,7 @@ function showAlert(parent, alertClassName, headingClassName = "alert-heading", a
     var alertTextElement = document.createElement("p");
     alertTextElement.setAttribute("class", textClassName);
     console.log("AlertText : ", alertText);
-    //javascript to html
-    alertText = alertText.split("\t").join("&nbsp;&nbsp;&nbsp;&nbsp;");
-    // alertText = alertText.split(" ").join("&nbsp;");
-    alertText = alertText.split("\n").join("<br />");
-    alertTextElement.innerHTML = alertText;
+    alertTextElement.innerHTML = "<pre>" + alertText + "</pre>";
     console.log("AlertText : ", alertText);
     alertDiv.appendChild(alertTextElement);
 }
@@ -738,17 +729,21 @@ function addToNoteDisplay(note, key, count) {
     innerDiv.setAttribute("data-parent", "#notes_diplay");
     card.appendChild(innerDiv);
 
-    note.note = note.note.split("\t").join("&nbsp;&nbsp;&nbsp;&nbsp;");
-    note.note = note.note.split(" ").join("&nbsp;");
-    note.note = note.note.split("\n").join("<br />");
 
     var innerDiv2 = document.createElement("div");
     innerDiv2.setAttribute("class", "card-body");
     console.log("type", type);
     if (type == "link")
-        innerDiv2.innerHTML = "<h6>Name : " + note.name + "</h6>" + "<br />category : " + note.category + "<br />Tags :" + note.tag + "<br />Date :" + note.date + "<br />Link : " + '<a href="' + note.note + '">' + note.note + '</a>';
+        innerDiv2.innerHTML = "<pre><b>Name     : " + note.name + "</b></pre>"
+                            + "<pre><b>Category : " + note.category + "</b></pre>"
+                            + "<pre><b>Tags     : " + note.tag + "</b></pre>"
+                            + "<pre><b>Date     : " + note.date + "</b></pre>"
+                            + "Link : " + '<a href="' + note.note + '">' + note.note + '</a>';
     else
-        innerDiv2.innerHTML = "<h6>Name : " + note.name + "</h6>" + "<br />category : " + note.category + "<br />Tags :" + note.tag + "<br />Date :" + note.date + "<br />Note : " + note.note;
+        innerDiv2.innerHTML = "<pre><b>Name     : " + note.name + "</b></pre>"
+                            + "<pre><b>Category : " + note.category + "</b></pre>"
+                            + "<pre><b>Date     : "  + note.date + "</b></pre>"
+                            + "<hr></h5><pre>"  + note.note + "</pre>";
     innerDiv.appendChild(innerDiv2);
 
 }
@@ -966,4 +961,13 @@ function enableEnter(fieldId, actionId) {
             $('#' + actionId).click();
         }
     });
+}
+
+function transformNote(note, shouldTransform) {
+    if(shouldTransform) {
+        note = note.split("\t").join("&nbsp;&nbsp;&nbsp;&nbsp;");
+        note = note.split(" ").join("&nbsp;");
+        note = note.split("\n").join("<br />");
+    }
+    return note;
 }

@@ -123,12 +123,10 @@ $(function () {
                 var innerDiv2 = $("<div></div>");
                 innerDiv2.attr("class", "card-body");
 
-                notes[i].note = notes[i].note.split("\t").join("&nbsp;&nbsp;&nbsp;&nbsp;");
-                notes[i].note = notes[i].note.split(" ").join("&nbsp;");
-                notes[i].note = notes[i].note.split("\n").join("<br />");
-
-
-                innerDiv2.html("<h6>Name : " + notes[i].name + "</h6>" + "<br />category : " + notes[i].category + "<br />Date :" + notes[i].date + "<br />Note : " + notes[i].note);
+                innerDiv2.html("<pre><b>Name     : " + notes[i].name     + "</b></pre>" +
+                               "<pre><b>category : " + notes[i].category + "</b></pre>" +
+                               "<pre><b>Date     : " + notes[i].date     + "</b></pre>" +
+                               "<hr><pre>"           + notes[i].note     + "</pre>");
                 innerDiv.append(innerDiv2);
                 hideElement("global_notes_spinner");
 
