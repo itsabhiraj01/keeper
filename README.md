@@ -23,3 +23,14 @@ Upcoming:
 9. Read later notes and clipped articles with reminders.
 10. CLI app for keeper.
 11. webhook/actions APIs.
+
+Keeper Home
+![Keeper Home](https://github.com/itsabhiraj01/keeper/blob/master/img/keeper_home.jpg)
+
+![Search Note](https://github.com/itsabhiraj01/keeper/blob/master/img/search_note.jpg)
+
+![Search note result](https://github.com/itsabhiraj01/keeper/blob/master/img/search_result.jpg)
+
+![Add Note](https://github.com/itsabhiraj01/keeper/blob/master/img/add_note.jpg)
+
+![Edit/Delete Note](https://github.com/itsabhiraj01/keeper/blob/master/img/edit_note.jpg)
